@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>G17</title>
+</head>
+<body>
+    <h1 id="titre">TEST-TITRE</h1>
+    <script>
+        fetch('http://localhost:8080/api/test')
+            .then(res => res.text())
+            .then(text => document.getElementById('titre').textContent = text);
+    </script>
+</body>
+</html>
