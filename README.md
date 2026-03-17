@@ -20,10 +20,16 @@ mvn spring-boot:run
 
 **vérifiez que le port 3000 est bien libre sur votre ordi!!!!**
 
+
 ```bash
 cd frontend
 python -m http.server 3000
 ```
+
+**Pour avoir acces à la page front il suffit de cliquer sur /public ou directement vous placez dans le repertoire public avant d'utiliser la commande python**
+
+**Pour tester avec le backend il faut lancer spring-boot sur un terminal et python sur un autre en simultané et normalement les evenements apparaissent**
+
 
 ## Déploiement
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription - Club de Foot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <h2>Connexion</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <button type="submit" class="btn-login">Se connecter</button>
+        </form>
+        <p><a href="index.html">Retour à l'accueil</a></p>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // fetch('.../api/users', { method: 'POST', ... }) mais vas y ça je sais pas faire
+            alert("Connexion envoyée ! (Simulation)");
+        });
+    </script>
+</body>
+</html>

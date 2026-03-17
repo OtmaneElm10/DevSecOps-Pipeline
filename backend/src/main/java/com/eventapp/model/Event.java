@@ -3,7 +3,9 @@ package com.eventapp.model;
 import java.sql.Date;
 
 public class Event {
-    private String id;
+
+    private Long id;
+
     private String title;
     private String description;
     private String lieu;
@@ -13,9 +15,10 @@ public class Event {
     private float prix;
     // TODO : Ajouter statut evenement
 
+    public Event() {}
 
-    public Event(String id, String title, String description, String lieu, Date dateDebut, Date dateFin, int capaciteMax, float prix) {
-        this.id = id;
+
+    public Event(String title, String description, String lieu, Date dateDebut, Date dateFin, int capaciteMax, float prix) {
         this.title = title;
         this.description = description;
         this.lieu = lieu;
@@ -35,7 +38,7 @@ public class Event {
 
     public String getLieu() { return lieu; }
 
-    public String getId() { return id; }
+    public Long getId() { return id; }
 
     public String getTitle() { return title; }
 

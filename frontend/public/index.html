@@ -2,14 +2,28 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>G17</title>
+    <title>Club de Foot G17</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 id="titre">TEST-TITRE</h1>
-    <script>
-        fetch('http://localhost:8080/api/test')
-            .then(res => res.text())
-            .then(text => document.getElementById('titre').textContent = text);
-    </script>
+
+    <header>
+        <div class="logo-box">
+            <h1>Application du club de foot</h1>
+        </div>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn-login-link">
+                <button class="btn-login">Login</button>
+            </a>
+            <a href="signup.html" class="btn-signup-link">
+                <button class="btn-signup">Signup</button>
+            </a>
+        </div>
+    </header>
+
+    <main id="event-list">
+        </main>
+
+    <script src="main.js"></script>
 </body>
 </html>

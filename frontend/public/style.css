@@ -1,0 +1,139 @@
+body {
+    background-color: #6887e2; 
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: block;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+.logo-box {
+    background: white;
+    border: 1px solid black;
+    padding: 10px 20px;
+}
+
+.logo-box h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* enleve un trait qui apparait entre les liens */
+.auth-buttons a {
+    text-decoration: none !important; 
+    color: transparent;              
+    outline: none;                    
+}
+
+/* Boutons Login / Signup */
+.auth-buttons button {
+    padding: 8px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.btn-login {
+    background-color: #007bff;
+    color: white;
+    border: 2px solid #007bff;
+    border: none;
+}
+
+/* effet d'ombre quand on passe la souris dessus */
+.btn-login:hover {
+    background-color: #0056b3; 
+    border-color: #0056b3;
+}
+
+.btn-signup {
+    background-color: transparent;
+    border: 1px solid #cae4ff;
+    color: #cae4ff;
+}
+
+.btn-signup:hover {
+    background-color: #f0f4ff; 
+    border-color: #f0f4ff;
+}
+
+main {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px;
+
+    max-width: none;
+    width : 100%;
+    box-sizing: border-box;
+}
+
+/* Style d'une carte */
+.card {
+    background-color: #8b8bcc; 
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* Bouton S'inscrire sur les cartes */
+.btn-register {
+    background-color: #3f407a;
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: auto; 
+}
+
+.btn-register:hover {
+    background-color: #2e2f5e;
+}
+
+/* formulaire signup */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.auth-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 350px;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
