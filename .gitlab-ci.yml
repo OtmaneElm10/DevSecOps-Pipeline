@@ -1,0 +1,31 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - cd backend
+    - mvn clean package -DskipTests
+    - cp target/event-app-0.0.1-SNAPSHOT.jar app.jar
+  artifacts:
+    paths:
+      - backend/app.jar
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - eval "$(ssh-agent -s)"
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H "$VM_HOST" >> ~/.ssh/known_hosts
+  script:
+    - scp backend/app.jar "$VM_USER@$VM_HOST:$VM_APP_DIR/app.jar"
+    - ssh "$VM_USER@$VM_HOST" "sudo systemctl restart monapp && sudo systemctl status monapp --no-pager"
+  only:
+    - main
