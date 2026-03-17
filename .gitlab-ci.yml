@@ -26,9 +26,8 @@ deploy:
   before_script:
     - apk add --no-cache openssh-client
     - eval "$(ssh-agent -s)"
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > key.pem
-    - chmod 400 key.pem
-    - ssh-add key.pem
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan -H "$VM_HOST" >> ~/.ssh/known_hosts
