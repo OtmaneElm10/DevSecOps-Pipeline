@@ -13,6 +13,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <properties>
         <java.version>17</java.version>
+        <sonar.projectKey>Web-app</sonar.projectKey>
+        <sonar.projectName>Web app</sonar.projectName>
+        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
     </properties>
     <dependencies>
         <dependency>
