@@ -1,4 +1,4 @@
-image: maven:3.9.6-eclipse-temurin-17
+image: maven:3-eclipse-temurin-21-alpine
 
 stages:
   - build
@@ -7,7 +7,9 @@ stages:
 build:
   stage: build
   before_script:
-    - ./ci/setup-mvn-proxy.sh 
+    - apk add --no-cache openssh-client
+    - chmod +x ci/setup-mvn-proxy.sh
+    - ./ci/setup-mvn-proxy.sh
   script:
     - cd backend
     - mvn clean package -DskipTests
@@ -30,4 +32,4 @@ deploy:
     - ssh-keyscan -H "$VM_HOST" >> ~/.ssh/known_hosts
   script:
     - scp backend/app.jar "$VM_USER@$VM_HOST:$VM_APP_DIR/app.jar"
-    - ssh "$VM_USER@$VM_HOST" "sudo systemctl restart monapp"
+    - ssh "$VM_USER@$VM_HOST" "sudo systemctl restart monapp && sudo systemctl status monapp --no-pager"
