@@ -37,8 +37,8 @@ sonar:
       - sonar-scanner/
   script:
     - cd backend
-    - mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-      -Dsonar.host.url=$SONAR_URL
+    - mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+      -Dsonar.host.url=$SONAR_URL \
       -Dsonar.login=$SONAR_TOKEN
   allow_failure: true
   rules:
@@ -46,7 +46,6 @@ sonar:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'main'
     - if: $CI_COMMIT_BRANCH == 'develop'
-
 
 deploy:
   stage: deploy
@@ -61,5 +60,5 @@ deploy:
     - chmod 700 ~/.ssh
     - ssh-keyscan -H "$VM_HOST" >> ~/.ssh/known_hosts
   script:
-    - scp backend/app.jar "$VM_USER@$VM_HOST:$VM_APP_DIR/app.jar"
+    - scp -o StrictHostKeyChecking=no backend/app.jar "$VM_USER@$VM_HOST:$VM_APP_DIR/app.jar"
     - ssh "$VM_USER@$VM_HOST" "sudo systemctl restart monapp && sudo systemctl status monapp --no-pager"
