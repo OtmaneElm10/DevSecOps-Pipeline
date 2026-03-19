@@ -9,6 +9,7 @@ stages:
   - build
   - sonar
   - deploy
+  - test
 
 build:
   stage: build
@@ -62,3 +63,15 @@ deploy:
   script:
     - scp -o StrictHostKeyChecking=no backend/app.jar "$VM_USER@$VM_HOST:$VM_APP_DIR/app.jar"
     - ssh "$VM_USER@$VM_HOST" "sudo systemctl restart monapp && sudo systemctl status monapp --no-pager"
+
+test-backend:
+  stage: test
+  before_script:
+    - chmod +x ci/setup-mvn-proxy.sh
+    - ./ci/setup-mvn-proxy.sh
+  script:
+    - cd backend
+    - mvn test
+  artifacts:
+    reports:
+      junit: backend/target/surefire-reports/TEST-*.xml
