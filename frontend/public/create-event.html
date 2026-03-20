@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un Événement - Club de Foot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+<div class="auth-container" style="width: 450px;">
+    <h2>Ajouter un événement</h2>
+
+    <form id="create-event-form">
+        <input type="text" id="title" placeholder="Titre (ex: Tournoi de hand)" required>
+        <input type="text" id="description" placeholder="Description courte" required>
+        <input type="text" id="lieu" placeholder="Lieu (ex: La Doua)" required>
+
+        <div style="text-align: left; margin: 10px 0 5px 0; font-size: 0.9em; color: #555;">Date de début :</div>
+        <input type="date" id="dateDebut" required>
+
+        <div style="text-align: left; margin: 10px 0 5px 0; font-size: 0.9em; color: #555;">Date de fin :</div>
+        <input type="date" id="dateFin" required>
+
+        <input type="number" id="capaciteMax" placeholder="Capacité maximum (ex: 50)" required min="1">
+        <input type="number" id="prix" placeholder="Prix en € (ex: 10.50)" step="0.01" required min="0">
+
+        <button type="submit" class="btn-login" style="margin-top: 15px;">Créer l'événement</button>
+    </form>
+
+    <p><a href="index.html">Retour à l'accueil</a></p>
+</div>
+
+<script>
+    document.getElementById('create-event-form').addEventListener('submit', async function(e) {
+        // 1. Empêche la page de se recharger
+        e.preventDefault();
+
+        // 2. On récupère toutes les valeurs tapées dans les cases
+        const newEvent = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            lieu: document.getElementById('lieu').value,
+            dateDebut: document.getElementById('dateDebut').value,
+            dateFin: document.getElementById('dateFin').value,
+            capaciteMax: parseInt(document.getElementById('capaciteMax').value),
+            prix: parseFloat(document.getElementById('prix').value)
+        };
+
+        console.log("Données prêtes à être envoyées :", newEvent);
+
+        // 3. On envoie les données au serveur Java
+        try {
+            const response = await fetch('http://localhost:8081/api/events', {
+                method: 'POST', // POST veut dire "Créer"
+                headers: {
+                    'Content-Type': 'application/json' // On prévient le serveur qu'on envoie du JSON
+                },
+                body: JSON.stringify(newEvent) // On transforme notre objet en texte JSON
+            });
+
+            if (response.ok) {
+                alert("Événement créé avec succès !");
+                window.location.href = "index.html"; // On ramène l'utilisateur à l'accueil
+            } else {
+                alert("Erreur du serveur. L'événement n'a pas pu être créé.");
+            }
+        } catch (error) {
+            console.error("Erreur réseau :", error);
+            alert("Impossible de joindre le serveur .");
+        }
+    });
+</script>
+</body>
+</html>
