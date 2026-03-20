@@ -1,6 +1,6 @@
 const eventList = document.getElementById('event-list');
 
-fetch('http://localhost:8080/api/events')
+fetch('http://localhost:8081/api/events')
     .then(res => res.json())
     .then(event => {
         if (event.length === 0) {
