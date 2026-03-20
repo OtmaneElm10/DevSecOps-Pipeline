@@ -7,9 +7,9 @@ variables:
 
 stages:
   - build
+  - test
   - sonar
   - deploy
-  - test
 
 build:
   stage: build
@@ -24,6 +24,18 @@ build:
   artifacts:
     paths:
       - backend/app.jar
+
+test-backend:
+  stage: test
+  before_script:
+    - chmod +x ci/setup-mvn-proxy.sh
+    - ./ci/setup-mvn-proxy.sh
+  script:
+    - cd backend
+    - mvn test
+  artifacts:
+    reports:
+      junit: backend/target/surefire-reports/TEST-*.xml
 
 sonar:
   stage: sonar
@@ -53,7 +65,7 @@ deploy:
   only:
     - main
   before_script:
-    - apk add --no-cache openssh-client
+    - apk add --no-cache openssh-client rsync
     - eval "$(ssh-agent -s)"
     - chmod 400 "$SSH_PRIVATE_KEY"
     - ssh-add "$SSH_PRIVATE_KEY"
@@ -62,16 +74,5 @@ deploy:
     - ssh-keyscan -H "$VM_HOST" >> ~/.ssh/known_hosts
   script:
     - scp -o StrictHostKeyChecking=no backend/app.jar "$VM_USER@$VM_HOST:$VM_APP_DIR/app.jar"
-    - ssh "$VM_USER@$VM_HOST" "sudo systemctl restart monapp && sudo systemctl status monapp --no-pager"
-
-test-backend:
-  stage: test
-  before_script:
-    - chmod +x ci/setup-mvn-proxy.sh
-    - ./ci/setup-mvn-proxy.sh
-  script:
-    - cd backend
-    - mvn test
-  artifacts:
-    reports:
-      junit: backend/target/surefire-reports/TEST-*.xml
+    - rsync -av --delete -e "ssh -o StrictHostKeyChecking=no" frontend/public/ "$VM_USER@$VM_HOST:/var/www/monapp/"
+    - ssh "$VM_USER@$VM_HOST" "sudo systemctl restart monapp && sudo systemctl reload nginx && sudo systemctl status monapp --no-pager"
