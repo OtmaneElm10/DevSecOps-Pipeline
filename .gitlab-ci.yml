@@ -69,6 +69,7 @@ sonarqube-vulnerability-report:
     - master
     - main
     - develop
+    - SonarConfig
   artifacts:
     expire_in: 1 day
     reports:
