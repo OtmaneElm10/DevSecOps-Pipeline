@@ -57,6 +57,7 @@ sonarqube-check:
     - master
     - main
     - develop
+    - SonarConfig
 
 sonarqube-vulnerability-report:
   stage: sonarqube-vulnerability-report
