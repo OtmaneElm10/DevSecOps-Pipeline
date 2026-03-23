@@ -53,7 +53,6 @@ sonarqube-check:
     - chmod +x ci/setup-mvn-proxy.sh
     - ./ci/setup-mvn-proxy.sh
   script:
-    - echo "SONAR_URL:$SONAR_URL"
     - cd backend
     - mvn verify sonar:sonar
       -Dsonar.host.url=$SONAR_URL
