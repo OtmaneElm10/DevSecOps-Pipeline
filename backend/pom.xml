@@ -16,7 +16,7 @@
         <sonar.projectKey>Web-app</sonar.projectKey>
         <sonar.projectName>Web app</sonar.projectName>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.host.url>https://sonar.info.univ-lyon1.fr/</sonar.host.url>
     </properties>
     <dependencies>
         <dependency>
