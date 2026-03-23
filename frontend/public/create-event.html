@@ -49,7 +49,7 @@
 
         // 3. On envoie les données au serveur Java
         try {
-            const response = await fetch('http://localhost:8081/api/events', {
+            const response = await fetch('/api/events', {
                 method: 'POST', // POST veut dire "Créer"
                 headers: {
                     'Content-Type': 'application/json' // On prévient le serveur qu'on envoie du JSON
