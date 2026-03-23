@@ -15,6 +15,7 @@
         <sonar.projectKey>g17_projettransversal2025-mif10_AZ0a45w9pItf3KCWeGy7</sonar.projectKey>
         <sonar.projectName>ProjetTransversal2025-Mif10 </sonar.projectName>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <sonar.host.url>https://sonar.info.univ-lyon1.fr</sonar.host.url>
     </properties>
     <dependencies>
         <dependency>
