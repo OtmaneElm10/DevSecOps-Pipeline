@@ -50,6 +50,7 @@ sonarqube-check:
     paths:
       - .sonar/cache
   script: 
+    - cd backend
     - mvn verify sonar:sonar
   allow_failure: true
   only:
