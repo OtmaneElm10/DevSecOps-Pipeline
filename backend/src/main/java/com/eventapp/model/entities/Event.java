@@ -2,12 +2,22 @@ package com.eventapp.model.entities;
 
 import java.sql.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
 /**
  * Represents an event in the application.
  */
+@Entity
 public class Event {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String description;
     private String lieu;
@@ -15,6 +25,9 @@ public class Event {
     private Date dateFin;
     private int capaciteMax;
     private float prix;
+
+    @ManyToOne
+    private User createdBy;
 
     /**
      * Default constructor.
@@ -77,6 +90,10 @@ public class Event {
         return prix;
     }
 
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
     public void setId(final Long id) {
         this.id = id;
     }
@@ -107,5 +124,9 @@ public class Event {
 
     public void setPrix(final float prix) {
         this.prix = prix;
+    }
+
+    public void setCreatedBy(final User createdBy) {
+        this.createdBy = createdBy;
     }
 }

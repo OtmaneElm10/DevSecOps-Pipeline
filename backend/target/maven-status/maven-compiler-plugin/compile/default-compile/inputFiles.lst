@@ -1,3 +1,7 @@
-/home/Louis444/Documents/M1/S2/projettransversal2025-mif10/backend/src/main/java/com/eventapp/controller/EventController.java
-/home/Louis444/Documents/M1/S2/projettransversal2025-mif10/backend/src/main/java/com/eventapp/EventAppApplication.java
-/home/Louis444/Documents/M1/S2/projettransversal2025-mif10/backend/src/main/java/com/eventapp/model/Event.java
+/home/otmane/Univ/M1/printemps/projetTransv/mif10/backend/src/main/java/com/eventapp/EventAppApplication.java
+/home/otmane/Univ/M1/printemps/projetTransv/mif10/backend/src/main/java/com/eventapp/model/entities/User.java
+/home/otmane/Univ/M1/printemps/projetTransv/mif10/backend/src/main/java/com/eventapp/controller/EventController.java
+/home/otmane/Univ/M1/printemps/projetTransv/mif10/backend/src/main/java/com/eventapp/model/service/EventService.java
+/home/otmane/Univ/M1/printemps/projetTransv/mif10/backend/src/main/java/com/eventapp/repositories/UserRepository.java
+/home/otmane/Univ/M1/printemps/projetTransv/mif10/backend/src/main/java/com/eventapp/model/entities/Event.java
+/home/otmane/Univ/M1/printemps/projetTransv/mif10/backend/src/main/java/com/eventapp/repositories/EventRepository.java
