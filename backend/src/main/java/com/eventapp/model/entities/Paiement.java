@@ -1,5 +1,4 @@
 
-Paiement.java
 package com.eventapp.model.entities;
 
 import java.sql.Date;
