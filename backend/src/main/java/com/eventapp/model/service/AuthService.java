@@ -29,13 +29,15 @@ public class AuthService {
      * @param password the user password
      * @return the saved user
      */
-    public User register(final String username, final String password) {
+    public User register(final String username, final String email, 
+        final  String password) {
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Email already used");
+            throw new RuntimeException("Username déjà utilisé");
         }
 
         User user = new User();
         user.setUsername(username);
+        user.setEmail(email);
         user.setPassword(password);
         user.setRole("USER");
 

@@ -17,10 +17,37 @@
     </div>
 
     <script>
-        document.getElementById('login-form').addEventListener('submit', function(e) {
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // fetch('.../api/users', { method: 'POST', ... }) mais vas y ça je sais pas faire
-            alert("Connexion envoyée ! (Simulation)");
+
+            const loginData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+
+                    localStorage.setItem('user', JSON.stringify(user));
+                    alert('Connexion réussie !');
+                    window.location.href = 'index.html';
+                } else {
+                    const errorMessage = await response.text();
+                    alert('Erreur de connexion : ' + errorMessage);
+                }
+            } catch (error) {
+                console.error('Erreur réseau :', error);
+                alert('Impossible de contacter le serveur.');
+            }
         });
     </script>
 </body>

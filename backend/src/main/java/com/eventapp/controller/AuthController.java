@@ -38,7 +38,11 @@ public class AuthController {
      */
     @PostMapping("/register")
     public User register(@RequestBody final Map<String, String> body) {
-        return authService.register(body.get("email"), body.get("password"));
+        return authService.register(
+            body.get("username"),
+            body.get("email"),
+            body.get("Password")
+        );
     }
 
     /**

@@ -35,7 +35,10 @@ public class User {
      * @param password the user password
      * @param role the user role
      */
-    public User(final String email, final String password, final String role) {
+    public User(final String username, final String email,
+         final String password, final String role) {
+        
+        this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -55,6 +58,10 @@ public class User {
 
     public String getRole() {
         return role;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setId(final Long id) {
