@@ -1,4 +1,4 @@
-package com.eventapp.model.repositories;
+package com.eventapp.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

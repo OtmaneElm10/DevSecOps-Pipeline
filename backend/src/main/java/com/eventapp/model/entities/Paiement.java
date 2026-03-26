@@ -1,0 +1,92 @@
+
+package com.eventapp.model.entities;
+
+import java.sql.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+
+
+/**
+ * Represents a payment in the application.
+ */
+@Entity
+@Table(name = "paiement")
+public class Paiement {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idPaiement;
+
+    private float montant;
+    private String statut;
+    private Date datePaiement;
+
+    @OneToOne
+    @JoinColumn(name = "id_reservation")
+    private Reservation reservation;
+
+    /**
+     * Default constructor.
+     */
+    public Paiement() {
+    }
+
+    /**
+     * Constructs a Paiement.
+     *
+     * @param montant the payment amount
+     * @param statut the payment status
+     * @param datePaiement the payment date
+     */
+    public Paiement(final float montant, final String statut, final Date datePaiement) {
+        this.montant = montant;
+        this.statut = statut;
+        this.datePaiement = datePaiement;
+    }
+
+    public Long getIdPaiement() {
+        return idPaiement;
+    }
+
+    public float getMontant() {
+        return montant;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public Date getDatePaiement() {
+        return datePaiement;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setIdPaiement(final Long idPaiement) {
+        this.idPaiement = idPaiement;
+    }
+
+    public void setMontant(final float montant) {
+        this.montant = montant;
+    }
+
+    public void setStatut(final String statut) {
+        this.statut = statut;
+    }
+
+    public void setDatePaiement(final Date datePaiement) {
+        this.datePaiement = datePaiement;
+    }
+
+    public void setReservation(final Reservation reservation) {
+        this.reservation = reservation;
+    }
+}
