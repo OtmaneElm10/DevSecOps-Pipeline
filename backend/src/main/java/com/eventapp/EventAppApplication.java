@@ -2,19 +2,26 @@ package com.eventapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+/**
+ * Main class of the EventApp application.
+ *
+ * <p>This class starts the Spring Boot application
+ * and initializes the server.</p>
+ */
 
 @SpringBootApplication
-@RestController
+@EntityScan("com.eventapp.model.entities")
 public class EventAppApplication {
 
-    public static void main(String[] args) {
+    /**
+     * Application entry point.
+     *
+     * @param args command line arguments
+     */
+    public static void main(final String[] args) {
         SpringApplication.run(EventAppApplication.class, args);
     }
-
-    @GetMapping("/api/test")
-    public String test() {
-        return "test";
-    }
 }
+
