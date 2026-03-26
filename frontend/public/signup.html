@@ -18,10 +18,38 @@
     </div>
 
     <script>
-        document.getElementById('signup-form').addEventListener('submit', function(e) {
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // fetch('.../api/users', { method: 'POST', ... }) mais vas y ça je sais pas faire
-            alert("Inscription envoyée ! (Simulation)");
+
+            const signupData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(signupData)
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+
+                    alert("Inscription réussie !");
+                    window.location.href = "login.html"; // redirection vers login
+                } else {
+                    const errorMessage = await response.text();
+                    alert("Erreur : " + errorMessage);
+                }
+
+            } catch (error) {
+                console.error("Erreur réseau :", error);
+                alert("Impossible de contacter le serveur.");
+            }
         });
     </script>
 </body>

@@ -20,6 +20,7 @@ public class User {
     private String email;
     private String password;
     private String role;
+    private String username; 
 
     /**
      * Default constructor.
@@ -34,7 +35,10 @@ public class User {
      * @param password the user password
      * @param role the user role
      */
-    public User(final String email, final String password, final String role) {
+    public User(final String username, final String email,
+         final String password, final String role) {
+        
+        this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -56,6 +60,10 @@ public class User {
         return role;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void setId(final Long id) {
         this.id = id;
     }
@@ -70,5 +78,9 @@ public class User {
 
     public void setRole(final String role) {
         this.role = role;
+    }
+
+    public void setUsername(final String username) {
+        this.username = username;
     }
 }
