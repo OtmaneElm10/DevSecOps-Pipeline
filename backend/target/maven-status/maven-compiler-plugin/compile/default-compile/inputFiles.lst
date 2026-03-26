@@ -1,9 +1,0 @@
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/model/entities/Match.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/controller/EventController.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/repositories/UserRepository.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/model/service/EventService.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/model/entities/Event.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/model/entities/User.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/repositories/EventRepository.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/EventAppApplication.java
-/home/alich/Mif10/projettransversal2025-mif10/backend/src/main/java/com/eventapp/model/entities/Equipe.java

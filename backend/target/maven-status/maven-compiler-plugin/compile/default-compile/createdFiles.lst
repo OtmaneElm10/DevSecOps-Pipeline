@@ -1,9 +1,0 @@
-com/eventapp/repositories/UserRepository.class
-com/eventapp/EventAppApplication.class
-com/eventapp/model/entities/Match.class
-com/eventapp/model/service/EventService.class
-com/eventapp/model/repositories/EventRepository.class
-com/eventapp/model/entities/Equipe.class
-com/eventapp/controller/EventController.class
-com/eventapp/model/entities/User.class
-com/eventapp/model/entities/Event.class
