@@ -35,9 +35,6 @@ public class Reservation {
     @JoinColumn(name = "id_evenement")
     private Event evenement;
 
-    @OneToOne(mappedBy = "reservation")
-    private Paiement paiement;
-
     /**
      * Default constructor.
      */
@@ -52,7 +49,7 @@ public class Reservation {
      * @param dateCreation the creation date
      * @param montantAttendu the expected amount
      */
-    public Reservation(final int nbPlaces, final String statut, 
+    public Reservation(final int nbPlaces, final String statut,
                        final Date dateCreation, final float montantAttendu) {
         this.nbPlaces = nbPlaces;
         this.statut = statut;
@@ -88,10 +85,6 @@ public class Reservation {
         return evenement;
     }
 
-    public Paiement getPaiement() {
-        return paiement;
-    }
-
     public void setIdReservation(final Long idReservation) {
         this.idReservation = idReservation;
     }
@@ -118,9 +111,5 @@ public class Reservation {
 
     public void setEvenement(final Event evenement) {
         this.evenement = evenement;
-    }
-
-    public void setPaiement(final Paiement paiement) {
-        this.paiement = paiement;
     }
 }
