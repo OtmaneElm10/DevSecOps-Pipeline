@@ -73,21 +73,45 @@ public class Match {
         this.evenement = evenement;
     }
 
-    public Long getId() { return id; }
-    public Date getDateMatch() { return dateMatch; }
-    public int getScoreA() { return scoreA; }
-    public int getScoreB() { return scoreB; }
-    public String getStatut() { return statut; }
-    public Equipe getEquipeA() { return equipeA; }
-    public Equipe getEquipeB() { return equipeB; }
-    public Event getEvenement() { return evenement; }
+    public Long getId() { 
+        return id; }
+    public Date getDateMatch() { 
+        return dateMatch; }
+    public int getScoreA() { 
+        return scoreA; }
+    public int getScoreB() { 
+        return scoreB; }
+    public String getStatut() { 
+        return statut; }
+    public Equipe getEquipeA() { 
+        return equipeA; }
+    public Equipe getEquipeB() { 
+        return equipeB; }
+    public Event getEvenement() { 
+        return evenement; }
 
-    public void setId(final Long id) { this.id = id; }
-    public void setDateMatch(final Date dateMatch) { this.dateMatch = dateMatch; }
-    public void setScoreA(final int scoreA) { this.scoreA = scoreA; }
-    public void setScoreB(final int scoreB) { this.scoreB = scoreB; }
-    public void setStatut(final String statut) { this.statut = statut; }
-    public void setEquipeA(final Equipe equipeA) { this.equipeA = equipeA; }
-    public void setEquipeB(final Equipe equipeB) { this.equipeB = equipeB; }
-    public void setEvenement(final Event evenement) { this.evenement = evenement; }
+    public void setId(final Long id) { 
+        this.id = id; }
+
+    public void setDateMatch(final Date dateMatch) { 
+        this.dateMatch = dateMatch; }
+
+    public void setScoreA(final int scoreA) { 
+        this.scoreA = scoreA; }
+
+    public void setScoreB(final int scoreB) { 
+        this.scoreB = scoreB; }
+
+    public void setStatut(final String statut) { 
+        this.statut = statut; }
+
+    public void setEquipeA(final Equipe equipeA) { 
+        this.equipeA = equipeA; }
+
+    public void setEquipeB(final Equipe equipeB) { 
+        this.equipeB = equipeB; }
+
+    public void setEvenement(final Event evenement) { 
+        this.evenement = evenement; }
 }
+
