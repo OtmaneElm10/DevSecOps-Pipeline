@@ -20,6 +20,7 @@ public class User {
     private String email;
     private String password;
     private String role;
+    private String username; 
 
     /**
      * Default constructor.
@@ -70,5 +71,9 @@ public class User {
 
     public void setRole(final String role) {
         this.role = role;
+    }
+
+    public void setUsername(final String username) {
+        this.username = username;
     }
 }
