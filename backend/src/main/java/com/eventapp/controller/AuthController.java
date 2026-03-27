@@ -41,7 +41,8 @@ public class AuthController {
         return authService.register(
             body.get("username"),
             body.get("email"),
-            body.get("Password")
+            body.get("password")
+            // body.get("role") ?
         );
     }
 
