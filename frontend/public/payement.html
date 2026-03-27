@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Paiement - Club de Foot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container" style="width: 400px;">
+        <h2>Paiement sécurisé</h2>
+        <p id="payment-summary">Récapitulatif : <strong id="amount-display">0</strong> €</p>
+        
+        <form id="payment-form">
+            <div class="card-input-container">
+                <input type="text" placeholder="Nom sur la carte" required>
+                <input type="text" placeholder="0000 0000 0000 0000" maxlength="16" required>
+                <div class="form-row">
+                    <input type="text" placeholder="MM/YY" maxlength="5" required>
+                    <input type="text" placeholder="CVC" maxlength="3" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-login" style="background-color: #28a745; border-color: #28a745;">
+                Payer maintenant
+            </button>
+            <p><a href="index.html" style="color: #666;">Annuler</a></p>
+        </form>
+    </div>
+
+    <script src="payment.js"></script>
+</body>
+</html>
