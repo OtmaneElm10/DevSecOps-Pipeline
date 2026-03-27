@@ -1,4 +1,4 @@
-image: maven:3-eclipse-temurin-21-alpine
+image: maven:3-eclipse-temurin-17-alpine
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -63,7 +63,7 @@ sonarqube-check:
     - master
     - main
     - develop
-    - SonarConfig
+    - SonarQube
 
 sonarqube-vulnerability-report:
   stage: sonarqube-vulnerability-report
@@ -75,7 +75,7 @@ sonarqube-vulnerability-report:
     - master
     - main
     - develop
-    - SonarConfig
+    - SonarQube
   artifacts:
     expire_in: 1 day
     reports:
