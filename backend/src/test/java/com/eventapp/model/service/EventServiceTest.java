@@ -1,40 +1,39 @@
 package com.eventapp.model.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.given;
 
-import java.sql.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.eventapp.model.entities.Event;
+import com.eventapp.repositories.EventRepository;
 
+@ExtendWith(MockitoExtension.class)
 class EventServiceTest {
 
-    private final EventService eventService = new EventService();
+    @Mock
+    private EventRepository eventRepository;
+
+    @InjectMocks
+    private EventService eventService;
 
     @Test
     void getAllEventsShouldReturnList() {
-        List<Event> events = eventService.getAllEvents();
+        Event event = new Event();
+        event.setTitle("Test");
 
-        assertEquals(4, events.size());
-        assertTrue(events.stream().anyMatch(e -> e.getTitle().equals("Gala du club")));
-        assertTrue(events.stream().anyMatch(e -> e.getTitle().equals("Stage M18")));
-        assertTrue(events.stream().anyMatch(e -> e.getTitle().equals("Match National")));
-        assertTrue(events.stream().anyMatch(e -> e.getTitle().equals("Tournoi")));
-    }
+        given(eventRepository.findAll()).willReturn(List.of(event));
 
-    @Test
-    void createEventShouldAddEventToList() {
-        long now = System.currentTimeMillis();
-        Event newEvent = new Event("New Event", "Description", "Location",
-                new Date(now), new Date(now + 1000), 100, 10.0f);
+        List<Event> result = eventService.getAllEvents();
 
-        Event result = eventService.createEvent(newEvent);
-
-        assertEquals(newEvent, result);
-        List<Event> events = eventService.getAllEvents();
-        assertTrue(events.contains(newEvent));
+        assertEquals(1, result.size());
+        assertEquals("Test", result.get(0).getTitle());
     }
 }
+

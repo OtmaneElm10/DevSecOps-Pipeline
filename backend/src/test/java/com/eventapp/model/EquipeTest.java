@@ -10,10 +10,9 @@ class EquipeTest {
 
     @Test
     void constructorShouldSetAllFields() {
-        Equipe equipe = new Equipe("Equipe A", "0123456789");
+        Equipe equipe = new Equipe("Equipe A");
 
         assertThat(equipe.getNomEquipe()).isEqualTo("Equipe A");
-        assertThat(equipe.getTelephone()).isEqualTo("0123456789");
     }
 
     @Test
@@ -21,7 +20,6 @@ class EquipeTest {
         Equipe equipe = new Equipe();
         assertThat(equipe.getId()).isNull();
         assertThat(equipe.getNomEquipe()).isNull();
-        assertThat(equipe.getTelephone()).isNull();
     }
 
     @Test
@@ -29,10 +27,8 @@ class EquipeTest {
         Equipe equipe = new Equipe();
         equipe.setId(1L);
         equipe.setNomEquipe("Equipe B");
-        equipe.setTelephone("0987654321");
 
         assertThat(equipe.getId()).isEqualTo(1L);
         assertThat(equipe.getNomEquipe()).isEqualTo("Equipe B");
-        assertThat(equipe.getTelephone()).isEqualTo("0987654321");
     }
 }

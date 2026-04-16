@@ -1,13 +1,16 @@
 package com.eventapp.model.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -21,47 +24,36 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+
     private String description;
+
+    @Column(nullable = false)
     private String lieu;
-    private Date dateDebut;
-    private Date dateFin;
+
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+
     private int capaciteMax;
-    private float prix;
+
+    private double prix;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EventType type;
 
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User createdBy;
 
     /**
-     * Default constructor.
+     * Deafult constructor.
      */
     public Event() {
     }
 
-    /**
-     * Constructs an Event.
-     *
-     * @param title the title of the event
-     * @param description the description of the event
-     * @param lieu the location of the event
-     * @param dateDebut the start date
-     * @param dateFin the end date
-     * @param capaciteMax the maximum capacity
-     * @param prix the price of the event
-     */
-    public Event(final String title, final String description, final String lieu,
-                 final Date dateDebut, final Date dateFin,
-                 final int capaciteMax, final float prix) {
-        this.title = title;
-        this.description = description;
-        this.lieu = lieu;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.capaciteMax = capaciteMax;
-        this.prix = prix;
-    }
-
+    
     public Long getId() {
         return id;
     }
@@ -78,11 +70,11 @@ public class Event {
         return lieu;
     }
 
-    public Date getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public Date getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
@@ -90,8 +82,12 @@ public class Event {
         return capaciteMax;
     }
 
-    public float getPrix() {
+    public double getPrix() {
         return prix;
+    }
+
+    public EventType getType() {
+        return type;
     }
 
     public User getCreatedBy() {
@@ -114,11 +110,11 @@ public class Event {
         this.lieu = lieu;
     }
 
-    public void setDateDebut(final Date dateDebut) {
+    public void setDateDebut(final LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public void setDateFin(final Date dateFin) {
+    public void setDateFin(final LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 
@@ -126,11 +122,16 @@ public class Event {
         this.capaciteMax = capaciteMax;
     }
 
-    public void setPrix(final float prix) {
+    public void setPrix(final double prix) {
         this.prix = prix;
+    }
+
+    public void setType(final EventType type) {
+        this.type = type;
     }
 
     public void setCreatedBy(final User createdBy) {
         this.createdBy = createdBy;
     }
 }
+

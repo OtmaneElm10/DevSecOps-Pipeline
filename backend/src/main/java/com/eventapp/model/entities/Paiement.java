@@ -1,14 +1,13 @@
-
 package com.eventapp.model.entities;
+import java.time.LocalDate;
 
-import java.sql.Date;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -21,14 +20,19 @@ public class Paiement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idPaiement;
+    private Long id;
 
-    private float montant;
+    @Column(nullable = false)
+    private double montant;
+
+    @Column(nullable = false)
     private String statut;
-    private Date datePaiement;
+
+    @Column(nullable = false)
+    private LocalDate datePaiement;
 
     @OneToOne
-    @JoinColumn(name = "id_reservation")
+    @JoinColumn(name = "id_reservation", nullable = false, unique = true)
     private Reservation reservation;
 
     /**
@@ -44,17 +48,17 @@ public class Paiement {
      * @param statut the payment status
      * @param datePaiement the payment date
      */
-    public Paiement(final float montant, final String statut, final Date datePaiement) {
+    public Paiement(final double montant, final String statut, final LocalDate datePaiement) {
         this.montant = montant;
         this.statut = statut;
         this.datePaiement = datePaiement;
     }
 
-    public Long getIdPaiement() {
-        return idPaiement;
+    public Long getId() {
+        return id;
     }
 
-    public float getMontant() {
+    public double getMontant() {
         return montant;
     }
 
@@ -62,7 +66,7 @@ public class Paiement {
         return statut;
     }
 
-    public Date getDatePaiement() {
+    public LocalDate getDatePaiement() {
         return datePaiement;
     }
 
@@ -70,11 +74,11 @@ public class Paiement {
         return reservation;
     }
 
-    public void setIdPaiement(final Long idPaiement) {
-        this.idPaiement = idPaiement;
+    public void setId(final Long idPaiement) {
+        this.id = idPaiement;
     }
 
-    public void setMontant(final float montant) {
+    public void setMontant(final double montant) {
         this.montant = montant;
     }
 
@@ -82,7 +86,7 @@ public class Paiement {
         this.statut = statut;
     }
 
-    public void setDatePaiement(final Date datePaiement) {
+    public void setDatePaiement(final LocalDate datePaiement) {
         this.datePaiement = datePaiement;
     }
 

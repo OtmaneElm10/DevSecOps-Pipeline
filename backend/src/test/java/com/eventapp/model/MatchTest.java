@@ -2,7 +2,7 @@ package com.eventapp.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,10 +14,10 @@ class MatchTest {
 
     @Test
     void constructorShouldSetAllFields() {
-        Date date = new Date(System.currentTimeMillis());
-        Equipe equipeA = new Equipe("Equipe A", "0123456789");
-        Equipe equipeB = new Equipe("Equipe B", "0987654321");
-        Event event = new Event("Match Event", "Description", "Stade", date, date, 100, 10.0f);
+        LocalDate date = LocalDate.now();
+        Equipe equipeA = new Equipe("Equipe A");
+        Equipe equipeB = new Equipe("Equipe B");
+        Event event = new Event();
 
         Match match = new Match(date, 2, 1, "Terminé", equipeA, equipeB, event);
 
@@ -27,27 +27,28 @@ class MatchTest {
         assertThat(match.getStatut()).isEqualTo("Terminé");
         assertThat(match.getEquipeA()).isEqualTo(equipeA);
         assertThat(match.getEquipeB()).isEqualTo(equipeB);
-        assertThat(match.getEvenement()).isEqualTo(event);
+        assertThat(match.getEvent()).isEqualTo(event);
     }
 
     @Test
     void defaultConstructorShouldCreateEmptyMatch() {
         Match match = new Match();
+
         assertThat(match.getId()).isNull();
         assertThat(match.getDateMatch()).isNull();
-        assertThat(match.getScoreA()).isEqualTo(0);
-        assertThat(match.getScoreB()).isEqualTo(0);
+        assertThat(match.getScoreA()).isNull(); // important : Integer
+        assertThat(match.getScoreB()).isNull();
         assertThat(match.getStatut()).isNull();
         assertThat(match.getEquipeA()).isNull();
         assertThat(match.getEquipeB()).isNull();
-        assertThat(match.getEvenement()).isNull();
+        assertThat(match.getEvent()).isNull();
     }
 
     @Test
     void settersShouldUpdateFields() {
         Match match = new Match();
-        Date date = new Date(System.currentTimeMillis());
-        Equipe equipeA = new Equipe("Equipe A", "0123456789");
+        LocalDate date = LocalDate.now();
+        Equipe equipeA = new Equipe("Equipe A");
         Event event = new Event();
 
         match.setId(1L);
@@ -57,7 +58,7 @@ class MatchTest {
         match.setStatut("En cours");
         match.setEquipeA(equipeA);
         match.setEquipeB(null);
-        match.setEvenement(event);
+        match.setEvent(event);
 
         assertThat(match.getId()).isEqualTo(1L);
         assertThat(match.getDateMatch()).isEqualTo(date);
@@ -66,6 +67,6 @@ class MatchTest {
         assertThat(match.getStatut()).isEqualTo("En cours");
         assertThat(match.getEquipeA()).isEqualTo(equipeA);
         assertThat(match.getEquipeB()).isNull();
-        assertThat(match.getEvenement()).isEqualTo(event);
+        assertThat(match.getEvent()).isEqualTo(event);
     }
 }
