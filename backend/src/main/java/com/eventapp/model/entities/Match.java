@@ -1,7 +1,9 @@
 
 package com.eventapp.model.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,25 +26,31 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date dateMatch;
-    private int scoreA;
-    private int scoreB;
+    @Column(nullable = false)
+    private LocalDate dateMatch;
+
+    // integer plutot que int: si un match n'as pas encore eu lieu , alors le score est
+    // null - null  et pas 0-0 (qui peut preter à confusion)
+    private Integer scoreA;
+    private Integer scoreB;
+
+    @Column(nullable = false)
     private String statut;
 
     /** PARTICIPER_A : equipe jouant en tant qu equipe A. */
     @ManyToOne
-    @JoinColumn(name = "id_equipe_a")
+    @JoinColumn(name = "id_equipe_a", nullable = false)
     private Equipe equipeA;
 
     /** PARTICIPER_B : equipe jouant en tant qu equipe B. */
     @ManyToOne
-    @JoinColumn(name = "id_equipe_b")
+    @JoinColumn(name = "id_equipe_b", nullable = false)
     private Equipe equipeB;
 
     /** EST_MATCH : evenement associe a ce match. */
     @OneToOne
-    @JoinColumn(name = "id_evenement")
-    private Event evenement;
+    @JoinColumn(name = "id_evenement", nullable = false, unique = true)
+    private Event event;
 
     /**
      * Default constructor.
@@ -59,47 +67,54 @@ public class Match {
      * @param statut    the match status
      * @param equipeA   team A
      * @param equipeB   team B
-     * @param evenement the associated event
+     * @param event the associated event
      */
-    public Match(final Date dateMatch, final int scoreA, final int scoreB,
+    public Match(final LocalDate dateMatch, final Integer scoreA, final Integer scoreB,
                  final String statut, final Equipe equipeA,
-                 final Equipe equipeB, final Event evenement) {
+                 final Equipe equipeB, final Event event) {
         this.dateMatch = dateMatch;
         this.scoreA = scoreA;
         this.scoreB = scoreB;
         this.statut = statut;
         this.equipeA = equipeA;
         this.equipeB = equipeB;
-        this.evenement = evenement;
+        this.event = event;
     }
 
     public Long getId() { 
         return id; }
-    public Date getDateMatch() { 
+
+    public LocalDate getDateMatch() { 
         return dateMatch; }
-    public int getScoreA() { 
+
+    public Integer getScoreA() { 
         return scoreA; }
-    public int getScoreB() { 
+
+    public Integer getScoreB() { 
         return scoreB; }
+
     public String getStatut() { 
         return statut; }
+
     public Equipe getEquipeA() { 
         return equipeA; }
+
     public Equipe getEquipeB() { 
         return equipeB; }
-    public Event getEvenement() { 
-        return evenement; }
+
+    public Event getEvent() { 
+        return event; }
 
     public void setId(final Long id) { 
         this.id = id; }
 
-    public void setDateMatch(final Date dateMatch) { 
+    public void setDateMatch(final LocalDate dateMatch) { 
         this.dateMatch = dateMatch; }
 
-    public void setScoreA(final int scoreA) { 
+    public void setScoreA(final Integer scoreA) { 
         this.scoreA = scoreA; }
 
-    public void setScoreB(final int scoreB) { 
+    public void setScoreB(final Integer scoreB) { 
         this.scoreB = scoreB; }
 
     public void setStatut(final String statut) { 
@@ -111,7 +126,7 @@ public class Match {
     public void setEquipeB(final Equipe equipeB) { 
         this.equipeB = equipeB; }
 
-    public void setEvenement(final Event evenement) { 
-        this.evenement = evenement; }
+    public void setEvent(final Event event) { 
+        this.event = event; }
 }
 

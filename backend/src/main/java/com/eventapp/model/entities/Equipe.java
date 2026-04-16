@@ -18,7 +18,6 @@ public class Equipe {
     private Long id;
 
     private String nomEquipe;
-    private String telephone;
 
     /**
      * Default constructor.
@@ -30,11 +29,9 @@ public class Equipe {
      * Constructs an Equipe.
      *
      * @param nomEquipe the team name
-     * @param telephone the contact phone number
      */
-    public Equipe(final String nomEquipe, final String telephone) {
+    public Equipe(final String nomEquipe) {
         this.nomEquipe = nomEquipe;
-        this.telephone = telephone;
     }
 
     public Long getId() {
@@ -45,9 +42,6 @@ public class Equipe {
         return nomEquipe;
     }
 
-    public String getTelephone() {
-        return telephone;
-    }
 
     public void setId(final Long id) {
         this.id = id;
@@ -55,10 +49,6 @@ public class Equipe {
 
     public void setNomEquipe(final String nomEquipe) {
         this.nomEquipe = nomEquipe;
-    }
-
-    public void setTelephone(final String telephone) {
-        this.telephone = telephone;
     }
 }
 

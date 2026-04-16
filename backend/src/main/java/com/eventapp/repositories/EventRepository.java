@@ -9,4 +9,3 @@ import com.eventapp.model.entities.Event;
  */
 public interface EventRepository extends JpaRepository<Event, Long> {
 }
-
