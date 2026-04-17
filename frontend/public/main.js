@@ -20,3 +20,13 @@ fetch('/api/events')
         `).join('');
     })
     .catch(err => console.error("Erreur back:", err));
+document.addEventListener('DOMContentLoaded', () => {
+    const userRole = localStorage.getItem('role');
+
+    if (userRole === 'ADMIN') {
+        const createBtn = document.getElementById('btn-create-event');
+        if (createBtn) {
+            createBtn.style.display = 'block';
+        }
+    }
+});
