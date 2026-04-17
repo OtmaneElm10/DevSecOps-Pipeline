@@ -2,6 +2,9 @@ package com.eventapp.model.service;
 
 import org.springframework.stereotype.Service;
 
+import com.eventapp.exception.InvalidPasswordException;
+import com.eventapp.exception.UserAlreadyExistsException;
+import com.eventapp.exception.UserNotFoundException;
 import com.eventapp.model.entities.User;
 import com.eventapp.repositories.UserRepository;
 
@@ -25,22 +28,23 @@ public class AuthService {
     /**
      * Registers a new user.
      *
-     * @param username username 
+     * @param username username
+     * @param email email of the user 
      * @param password the user password
      * @return the saved user
      */
     public User register(final String username, final String email, 
         final  String password) {
+        
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username déjà utilisé");
+            throw new UserAlreadyExistsException("Username déja utilisé");
         }
 
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole("USER");
-
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserAlreadyExistsException("Email déjà utilisé");
+        }
+        
+        User user = new User(username, email, password, "USER");
         return userRepository.save(user);
     }
 
@@ -54,10 +58,10 @@ public class AuthService {
     
     public User login(final String username, final String password) {
         User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new RuntimeException("User not found"));
-
+            .orElseThrow(UserNotFoundException::new);
+        
         if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("Invalid password");
+            throw new InvalidPasswordException();
         }
 
         return user;

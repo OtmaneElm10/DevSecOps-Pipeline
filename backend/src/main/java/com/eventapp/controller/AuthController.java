@@ -1,13 +1,16 @@
 package com.eventapp.controller;
 
-import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eventapp.model.dto.LoginRequestDto;
+import com.eventapp.model.dto.RegisterRequestDto;
 import com.eventapp.model.entities.User;
 import com.eventapp.model.service.AuthService;
 
@@ -31,30 +34,37 @@ public class AuthController {
     }
 
     /**
-     * Registers a new user.
-     *
-     * @param body request body containing email and password
-     * @return the created user
-     */
+    * Register a new user.
+    *
+    * @param  request request body containing email, password and username.
+    * @return the created user
+    */
     @PostMapping("/register")
-    public User register(@RequestBody final Map<String, String> body) {
-        return authService.register(
-            body.get("username"),
-            body.get("email"),
-            body.get("password")
-            // body.get("role") ?
+    public ResponseEntity<User> register(@RequestBody final RegisterRequestDto request) {
+        
+        User user = authService.register(
+            request.getUsername(),
+            request.getEmail(),
+            request.getPassword()
         );
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     /**
-     * Logs in a user.
-     *
-     * @param body request body containing email and password
-     * @return the authenticated user
-     */
+    * Logs in a user.
+    *
+    * @param request request body containing username and password
+    * @return the authenticated user
+    */
     @PostMapping("/login")
-    public User login(@RequestBody final Map<String, String> body) {
-        return authService.login(body.get("username"), body.get("password"));
+    public ResponseEntity<User> login(@RequestBody final LoginRequestDto request) {
+        User user = authService.login(
+            request.getUsername(),
+            request.getPassword()
+        );
+        return ResponseEntity.ok(user);
+            
     }
+
 }
 
