@@ -5,14 +5,15 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
+import com.eventapp.model.dto.LoginRequestDto;
+import com.eventapp.model.dto.RegisterRequestDto;
 import com.eventapp.model.entities.User;
 import com.eventapp.model.service.AuthService;
 
@@ -29,43 +30,49 @@ class AuthControllerTest {
         authController = new AuthController(authService);
     }
 
-    // @Test
-    // void registerShouldReturnUser() {
-    //     User user = new User("testpseudo", "test@example.com", "password", "USER");
-    //     user.setId(1L);
-    //
-    //     given(authService.register("testpseudo", "test@example.com", "password")).willReturn(user);
-    //
-    //     Map<String, String> requestBody = Map.of(
-    //         "username", "testpseudo",
-    //         "email", "test@example.com",
-    //         "Password", "password"
-    //     );
-    //
-    //     User result = authController.register(requestBody);
-    //
-    //     assertEquals(user.getId(), result.getId());
-    //     assertEquals("testpseudo", result.getUsername());
-    //     assertEquals("test@example.com", result.getEmail());
-    //     verify(authService, times(1)).register("testpseudo", "test@example.com", "password");
-    // }
+    @Test
+    void registerShouldReturnCreatedUser() {
+        User user = new User("testpseudo", "test@example.com", "password", "USER");
+        user.setId(1L);
+
+        RegisterRequestDto request = new RegisterRequestDto();
+        request.setUsername("testpseudo");
+        request.setEmail("test@example.com");
+        request.setPassword("password");
+
+        given(authService.register("testpseudo", "test@example.com", "password"))
+                .willReturn(user);
+
+        ResponseEntity<User> response = authController.register(request);
+
+        assertEquals(201, response.getStatusCode().value());
+        assertEquals(user.getId(), response.getBody().getId());
+        assertEquals("testpseudo", response.getBody().getUsername());
+        assertEquals("test@example.com", response.getBody().getEmail());
+
+        verify(authService, times(1))
+                .register("testpseudo", "test@example.com", "password");
+    }
 
     @Test
     void loginShouldReturnUser() {
         User user = new User("testpseudo", "test@example.com", "password", "USER");
         user.setId(1L);
 
+        LoginRequestDto request = new LoginRequestDto();
+        request.setUsername("testpseudo");
+        request.setPassword("password");
+
         given(authService.login("testpseudo", "password")).willReturn(user);
 
-        Map<String, String> requestBody = Map.of(
-            "username", "testpseudo",
-            "password", "password"
-        );
+        ResponseEntity<?> response = authController.login(request);
 
-        User result = authController.login(requestBody);
+        assertEquals(200, response.getStatusCode().value());
 
+        User result = (User) response.getBody();
         assertEquals(user.getId(), result.getId());
         assertEquals("testpseudo", result.getUsername());
+
         verify(authService, times(1)).login("testpseudo", "password");
     }
 }
