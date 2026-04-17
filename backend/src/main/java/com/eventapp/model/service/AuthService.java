@@ -37,7 +37,7 @@ public class AuthService {
         final  String password) {
         
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new UserAlreadyExistsException("Username déja utilisé");
+            throw new UserAlreadyExistsException("Username déjà utilisé");
         }
 
         if (userRepository.findByEmail(email).isPresent()) {
