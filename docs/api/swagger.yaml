@@ -26,12 +26,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RegisterRequest'
-            examples:
-              default:
-                value:
-                  username: otmane
-                  email: otmane@example.com
-                  password: "123456"
       responses:
         '200':
           description: User created
@@ -40,7 +34,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
         '400':
-          description: Invalid request or username/email already used
+          description: Invalid request
           content:
             application/json:
               schema:
@@ -56,11 +50,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
-            examples:
-              default:
-                value:
-                  username: otmane
-                  password: "123456"
       responses:
         '200':
           description: Login successful
@@ -78,7 +67,13 @@ paths:
   /api/events:
     get:
       tags: [Events]
-      summary: Get all events
+      summary: Get all events (optionally filtered by type)
+      parameters:
+        - name: type
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/EventType'
       responses:
         '200':
           description: List of events
@@ -97,20 +92,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/EventCreateRequest'
-            examples:
-              default:
-                value:
-                  title: Tournoi d'été
-                  description: Tournoi amical entre clubs locaux
-                  lieu: Complexe Sportif
-                  dateDebut: 2026-06-15
-                  dateFin: 2026-06-16
-                  capaciteMax: 30
-                  prix: 10.0
-                  type: TOURNOI
-                  createdById: 1
       responses:
-        '200':
+        '201':
           description: Event created
           content:
             application/json:
@@ -181,198 +164,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/reservations:
-    get:
-      tags: [Reservations]
-      summary: Get all reservations
-      responses:
-        '200':
-          description: List of reservations
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Reservation'
-    post:
-      tags: [Reservations]
-      summary: Create a reservation
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReservationCreateRequest'
-            examples:
-              default:
-                value:
-                  nbPlaces: 2
-                  statut: CONFIRMEE
-                  dateCreation: 2026-04-16
-                  montantAttendu: 20.0
-                  userId: 1
-                  eventId: 3
-      responses:
-        '200':
-          description: Reservation created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Reservation'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /api/reservations/user/{userId}:
-    get:
-      tags: [Reservations]
-      summary: Get reservations by user id
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: List of reservations for the user
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Reservation'
-        '404':
-          description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /api/paiements:
-    post:
-      tags: [Paiements]
-      summary: Create a payment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PaiementCreateRequest'
-            examples:
-              default:
-                value:
-                  montant: 20.0
-                  statut: PAYE
-                  datePaiement: 2026-04-16
-                  reservationId: 5
-      responses:
-        '200':
-          description: Payment created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Paiement'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /api/matchs:
-    get:
-      tags: [Matchs]
-      summary: Get all matches
-      responses:
-        '200':
-          description: List of matches
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Match'
-    post:
-      tags: [Matchs]
-      summary: Create a match
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MatchCreateRequest'
-            examples:
-              default:
-                value:
-                  dateMatch: 2026-05-03
-                  scoreA: null
-                  scoreB: null
-                  statut: A_VENIR
-                  equipeAId: 1
-                  equipeBId: 2
-                  eventId: 7
-      responses:
-        '200':
-          description: Match created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Match'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /api/inscriptions-tournoi:
-    get:
-      tags: [Inscriptions tournoi]
-      summary: Get all tournament registrations
-      responses:
-        '200':
-          description: List of tournament registrations
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/InscriptionTournoi'
-    post:
-      tags: [Inscriptions tournoi]
-      summary: Register a team to a tournament
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InscriptionTournoiCreateRequest'
-            examples:
-              default:
-                value:
-                  statut: EN_ATTENTE
-                  dateInscription: 2026-04-16
-                  equipeId: 1
-                  eventId: 4
-      responses:
-        '200':
-          description: Registration created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InscriptionTournoi'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
 components:
   parameters:
     IdPathParam:
@@ -399,7 +190,6 @@ components:
           type: string
         email:
           type: string
-          format: email
         password:
           type: string
       required:
@@ -423,19 +213,12 @@ components:
       properties:
         id:
           type: integer
-          format: int64
         username:
           type: string
         email:
           type: string
-          format: email
         role:
           type: string
-      required:
-        - id
-        - username
-        - email
-        - role
 
     EventType:
       type: string
@@ -450,33 +233,24 @@ components:
       properties:
         id:
           type: integer
-          format: int64
         title:
           type: string
         description:
           type: string
-          nullable: true
         lieu:
           type: string
         dateDebut:
           type: string
           format: date
-          nullable: true
         dateFin:
           type: string
           format: date
-          nullable: true
         capaciteMax:
           type: integer
         prix:
           type: number
-          format: double
         type:
           $ref: '#/components/schemas/EventType'
-        createdById:
-          type: integer
-          format: int64
-          nullable: true
       required:
         - id
         - title
@@ -502,233 +276,9 @@ components:
           type: integer
         prix:
           type: number
-          format: double
         type:
           $ref: '#/components/schemas/EventType'
-        createdById:
-          type: integer
-          format: int64
       required:
         - title
         - lieu
         - type
-
-    Reservation:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        nbPlaces:
-          type: integer
-        statut:
-          type: string
-        dateCreation:
-          type: string
-          format: date
-        montantAttendu:
-          type: number
-          format: double
-        userId:
-          type: integer
-          format: int64
-        eventId:
-          type: integer
-          format: int64
-      required:
-        - id
-        - nbPlaces
-        - statut
-        - dateCreation
-        - userId
-        - eventId
-
-    ReservationCreateRequest:
-      type: object
-      properties:
-        nbPlaces:
-          type: integer
-        statut:
-          type: string
-        dateCreation:
-          type: string
-          format: date
-        montantAttendu:
-          type: number
-          format: double
-        userId:
-          type: integer
-          format: int64
-        eventId:
-          type: integer
-          format: int64
-      required:
-        - nbPlaces
-        - statut
-        - dateCreation
-        - userId
-        - eventId
-
-    Paiement:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        montant:
-          type: number
-          format: double
-        statut:
-          type: string
-        datePaiement:
-          type: string
-          format: date
-        reservationId:
-          type: integer
-          format: int64
-      required:
-        - id
-        - montant
-        - statut
-        - datePaiement
-        - reservationId
-
-    PaiementCreateRequest:
-      type: object
-      properties:
-        montant:
-          type: number
-          format: double
-        statut:
-          type: string
-        datePaiement:
-          type: string
-          format: date
-        reservationId:
-          type: integer
-          format: int64
-      required:
-        - montant
-        - statut
-        - datePaiement
-        - reservationId
-
-    Equipe:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        nomEquipe:
-          type: string
-      required:
-        - id
-        - nomEquipe
-
-    Match:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        dateMatch:
-          type: string
-          format: date
-        scoreA:
-          type: integer
-          nullable: true
-        scoreB:
-          type: integer
-          nullable: true
-        statut:
-          type: string
-        equipeAId:
-          type: integer
-          format: int64
-        equipeBId:
-          type: integer
-          format: int64
-        eventId:
-          type: integer
-          format: int64
-      required:
-        - id
-        - dateMatch
-        - statut
-        - equipeAId
-        - equipeBId
-        - eventId
-
-    MatchCreateRequest:
-      type: object
-      properties:
-        dateMatch:
-          type: string
-          format: date
-        scoreA:
-          type: integer
-          nullable: true
-        scoreB:
-          type: integer
-          nullable: true
-        statut:
-          type: string
-        equipeAId:
-          type: integer
-          format: int64
-        equipeBId:
-          type: integer
-          format: int64
-        eventId:
-          type: integer
-          format: int64
-      required:
-        - dateMatch
-        - statut
-        - equipeAId
-        - equipeBId
-        - eventId
-
-    InscriptionTournoi:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        statut:
-          type: string
-        dateInscription:
-          type: string
-          format: date
-        equipeId:
-          type: integer
-          format: int64
-        eventId:
-          type: integer
-          format: int64
-      required:
-        - id
-        - statut
-        - dateInscription
-        - equipeId
-        - eventId
-
-    InscriptionTournoiCreateRequest:
-      type: object
-      properties:
-        statut:
-          type: string
-        dateInscription:
-          type: string
-          format: date
-        equipeId:
-          type: integer
-          format: int64
-        eventId:
-          type: integer
-          format: int64
-      required:
-        - statut
-        - dateInscription
-        - equipeId
-        - eventId
