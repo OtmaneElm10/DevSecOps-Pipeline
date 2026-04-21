@@ -30,14 +30,16 @@
 
         <hr style="margin: 20px 0; border-top: 1px solid #ddd;">
         <label style="font-weight: bold; color: #333;">Type d'événement :</label>
-        <select id="eventType" required style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;">
+        <select id="eventType" required
+                style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;">
             <option value="">-- Sélectionnez un type --</option>
             <option value="MATCH">Match Officiel</option>
-            <option value="ENTRAINEMENT">Entraînement</option>
+            <option value="STAGE">Entraînement</option>
             <option value="TOURNOI">Tournoi</option>
         </select>
 
-        <div id="dynamic-match" class="dynamic-section" style="display: none; margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
+        <div id="dynamic-match" class="dynamic-section"
+             style="display: none; margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
             <label style="font-size: 0.9em; color: #6887e2; font-weight: bold;">Détails du Match</label>
             <input type="text" id="equipeAdverse" placeholder="Nom de l'équipe adverse">
             <select id="typeMatch" style="width: 100%; padding: 10px; margin-top: 5px;">
@@ -46,7 +48,8 @@
             </select>
         </div>
 
-        <div id="dynamic-tournoi" class="dynamic-section" style="display: none; margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
+        <div id="dynamic-tournoi" class="dynamic-section"
+             style="display: none; margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
             <label style="font-size: 0.9em; color: #6887e2; font-weight: bold;">Détails du Tournoi</label>
             <input type="number" id="nbEquipes" placeholder="Nombre d'équipes participantes">
         </div>
@@ -60,69 +63,68 @@
 <script>
     const eventTypeSelect = document.getElementById('eventType');
 
-    // On écoute l'événement 'change' sur la liste déroulante
-    eventTypeSelect.addEventListener('change', function() {
-        // 1. On récupère la valeur choisie (MATCH, ENTRAINEMENT, ou TOURNOI)
+    eventTypeSelect.addEventListener('change', function () {
         const selectedType = this.value;
 
-        // 2. On cache toutes les sections dynamiques pour remettre à zéro
         const allDynamicSections = document.querySelectorAll('.dynamic-section');
         allDynamicSections.forEach(section => {
             section.style.display = 'none';
         });
 
-        // 3. On affiche seulement la bonne section
         if (selectedType === 'MATCH') {
             document.getElementById('dynamic-match').style.display = 'block';
         } else if (selectedType === 'TOURNOI') {
             document.getElementById('dynamic-tournoi').style.display = 'block';
         }
-        // Si c'est Entraînement, on ne fait rien de spécial, il n'y a pas de champs en plus !
     });
-    document.getElementById('create-event-form').addEventListener('submit', async function(e) {
-        // 1. Empêche la page de se recharger
+
+    document.getElementById('create-event-form').addEventListener('submit', async function (e) {
         e.preventDefault();
+
         const type = document.getElementById('eventType').value;
-        // 2. On récupère toutes les valeurs tapées dans les cases
-        let newEvent = {
+
+        const newEvent = {
             title: document.getElementById('title').value,
             description: document.getElementById('description').value,
             lieu: document.getElementById('lieu').value,
             dateDebut: document.getElementById('dateDebut').value,
             dateFin: document.getElementById('dateFin').value,
-            capaciteMax: parseInt(document.getElementById('capaciteMax').value),
+            capaciteMax: parseInt(document.getElementById('capaciteMax').value, 10),
             prix: parseFloat(document.getElementById('prix').value),
-            eventType: type
+            type: type
         };
-
-        if (type === 'MATCH') {
-            newEvent.equipeAdverse = document.getElementById('equipeAdverse').value;
-            newEvent.typeMatch = document.getElementById('typeMatch').value;
-        } else if (type === 'TOURNOI') {
-            newEvent.nbEquipes = parseInt(document.getElementById('nbEquipes').value);
-        }
 
         console.log("Données prêtes à être envoyées :", newEvent);
 
-        // 3. On envoie les données au serveur Java
         try {
             const response = await fetch('/api/events', {
-                method: 'POST', // POST veut dire "Créer"
+                method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json' // On prévient le serveur qu'on envoie du JSON
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(newEvent) // On transforme notre objet en texte JSON
+                body: JSON.stringify(newEvent)
             });
 
             if (response.ok) {
                 alert("Événement créé avec succès !");
-                window.location.href = "index.html"; // On ramène l'utilisateur à l'accueil
+                window.location.href = "index.html";
             } else {
-                alert("Erreur du serveur. L'événement n'a pas pu être créé.");
+                let errorMessage = "Erreur du serveur. L'événement n'a pas pu être créé.";
+
+                try {
+                    const errorData = await response.json();
+                    if (errorData.message) {
+                        errorMessage = errorData.message;
+                    }
+                } catch (jsonError) {
+                    // Pas de JSON exploitable, on garde le message générique
+                }
+
+                alert(errorMessage);
             }
         } catch (error) {
             console.error("Erreur réseau :", error);
-            alert("Impossible de joindre le serveur .");
+            alert("Impossible de joindre le serveur.");
         }
     });
 </script>
