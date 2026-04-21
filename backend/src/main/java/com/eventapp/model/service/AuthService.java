@@ -2,9 +2,9 @@ package com.eventapp.model.service;
 
 import org.springframework.stereotype.Service;
 
-import com.eventapp.exception.InvalidPasswordException;
-import com.eventapp.exception.UserAlreadyExistsException;
-import com.eventapp.exception.UserNotFoundException;
+import com.eventapp.exception.AuthException.InvalidPasswordException;
+import com.eventapp.exception.AuthException.UserAlreadyExistsException;
+import com.eventapp.exception.AuthException.UserNotFoundException;
 import com.eventapp.model.entities.User;
 import com.eventapp.repositories.UserRepository;
 

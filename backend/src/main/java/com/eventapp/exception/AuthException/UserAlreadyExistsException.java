@@ -1,4 +1,4 @@
-package com.eventapp.exception;
+package com.eventapp.exception.AuthException;
 
 /**
  * Exception thrown when a user already exists.

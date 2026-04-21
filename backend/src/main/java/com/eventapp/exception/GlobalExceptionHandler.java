@@ -7,6 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.eventapp.exception.AuthException.InvalidPasswordException;
+import com.eventapp.exception.AuthException.UserAlreadyExistsException;
+import com.eventapp.exception.AuthException.UserNotFoundException;
+import com.eventapp.exception.EventException.EventNotFoundException;
+
 /**
  * Global exception handler for the application.
  */
@@ -24,6 +29,18 @@ public class GlobalExceptionHandler {
             final UserNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("message", e.getMessage()));
+    }
+
+    /**
+     * Handles event not found exceptions.
+     * @param e exception
+     * @return HTTP 404 response
+     */
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleEventNotFound(
+        final EventNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", e.getMessage()));       
     }
 
     /**
