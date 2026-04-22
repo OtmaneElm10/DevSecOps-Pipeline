@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eventapp.model.entities.User;
 import com.eventapp.model.service.UserService;
 
+/**
+ * User controller.
+ * Handles HTTP requests related to users.
+ */
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
@@ -25,8 +29,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    
+    /**
+     * Retrieves a user by their username.
+     * @param username
+     * @return
+     */
     @GetMapping("/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<User> getUserByUsername(@PathVariable final  String username) {
         User user = userService.getByUsername(username);
         return ResponseEntity.ok(user);
     }
