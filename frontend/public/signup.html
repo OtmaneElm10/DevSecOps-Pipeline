@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -14,7 +15,7 @@
             <input type="password" id="password" placeholder="Mot de passe" required>
             <button type="submit" class="btn-login">S'inscrire</button>
         </form>
-        <p><a href="index.html">Retour à l'accueil</a></p>
+        <p><a href="index.html">← Retour à l'accueil</a></p>
     </div>
 
     <script>
@@ -40,7 +41,7 @@
                     const user = await response.json();
 
                     alert("Inscription réussie !");
-                    window.location.href = "login.html"; // redirection vers login
+                    window.location.href = "login.html";
                 } else {
                     const errorMessage = await response.text();
                     alert("Erreur : " + errorMessage);
