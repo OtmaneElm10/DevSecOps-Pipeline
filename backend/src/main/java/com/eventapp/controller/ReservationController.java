@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventapp.model.service.ReservationService;
+import com.eventapp.model.dto.ReservationResponseDto;
 import com.eventapp.model.entities.Reservation;
 
 /**
@@ -40,7 +41,7 @@ public class ReservationController {
      * @return list of all reservations
      */
     @GetMapping
-    public ResponseEntity<List<Reservation>> getAllReservations() {
+    public ResponseEntity<List<ReservationResponseDto>> getAllReservations() {
         return ResponseEntity.ok(reservationService.getAllReservations());
     }
 
@@ -51,7 +52,7 @@ public class ReservationController {
      * @return list of reservations for the specified user ID
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Reservation>> getReservationsById(
+    public ResponseEntity<List<ReservationResponseDto>> getReservationsById(
         final @PathVariable Long userId) {
         return ResponseEntity.ok(reservationService.getReservationsByUserId(userId));
     }
