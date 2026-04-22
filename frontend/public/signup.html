@@ -17,38 +17,23 @@
         <p><a href="index.html">Retour à l'accueil</a></p>
     </div>
 
-    <script>
+    <script type="module">
+        import { register } from './authApi.js';
+
         document.getElementById('signup-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-
-            const signupData = {
-                username: document.getElementById('username').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
-            };
-
+            //On récupère les valeurs des champs
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            //On appelle la fonction de notre API qui est dans authApi.js
             try {
-                const response = await fetch('/api/auth/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(signupData)
-                });
-
-                if (response.ok) {
-                    const user = await response.json();
-
-                    alert("Inscription réussie !");
-                    window.location.href = "login.html"; // redirection vers login
-                } else {
-                    const errorMessage = await response.text();
-                    alert("Erreur : " + errorMessage);
-                }
-
-            } catch (error) {
-                console.error("Erreur réseau :", error);
-                alert("Impossible de contacter le serveur.");
+                const result = await register(username, email, password);
+                console.log("Utilisateur créé :", result);
+                alert("Compte créé avec succès !");
+                window.location.href = "login.html";
+            } catch (err) {
+                alert("Erreur lors de l'inscription.");
             }
         });
     </script>
