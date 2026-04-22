@@ -1,170 +1,618 @@
-body {
-    background-color: #6887e2; 
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    display: block;
+/* ===================================================
+   CLUB DE FOOT — Thème "Pitch & Gold"
+   Vert terrain + Noir + Or
+   =================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg-0: #05070a;           /* quasi noir */
+    --bg-1: #0a1410;           /* vert très sombre */
+    --bg-2: #102a1d;           /* vert foncé terrain */
+    --pitch: #14532d;          /* vert pelouse */
+    --pitch-bright: #22c55e;   /* vert accent lumineux */
+    --pitch-line: #1f6b3a;
+
+    --gold: #e5b443;           /* or signature */
+    --gold-soft: #f2cf6d;
+    --gold-glow: rgba(229, 180, 67, 0.35);
+
+    --text: #f5f5f2;
+    --text-muted: #9aa39d;
+    --text-dark: #0a1410;
+
+    --border: rgba(229, 180, 67, 0.25);
+    --border-soft: rgba(255, 255, 255, 0.08);
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-gold: 0 0 0 1px var(--border), 0 8px 30px rgba(229, 180, 67, 0.15);
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ---------- Reset ---------- */
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Manrope', system-ui, sans-serif;
+    color: var(--text);
+    background-color: var(--bg-0);
+    background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(34, 197, 94, 0.18), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(229, 180, 67, 0.08), transparent 60%),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 80px,
+            rgba(255, 255, 255, 0.015) 80px 81px
+        );
+    background-attachment: fixed;
+    padding: 32px 40px;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.01em;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ---------- HEADER ---------- */
 header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 40px;
+    align-items: center;
+    margin-bottom: 56px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-soft);
+    animation: fadeDown 0.7s var(--ease) both;
 }
 
 .logo-box {
-    background: white;
-    border: 1px solid black;
-    padding: 10px 20px;
+    position: relative;
+    background: linear-gradient(135deg, var(--bg-2), var(--bg-1));
+    border: 1px solid var(--border);
+    padding: 14px 28px 14px 64px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-gold);
+    overflow: hidden;
+}
+
+.logo-box::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 30% 30%, #fff 0 8%, transparent 9%),
+        conic-gradient(from 0deg, #000 0 20%, #fff 20% 40%, #000 40% 60%, #fff 60% 80%, #000 80%);
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.logo-box::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--gold), var(--pitch-bright));
 }
 
 .logo-box h1 {
     margin: 0;
-    font-size: 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-transform: uppercase;
 }
 
-/* enleve un trait qui apparait entre les liens */
+.logo-box h1::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--gold);
+    margin-top: 4px;
+    border-radius: 2px;
+}
+
+/* ---------- Boutons auth (header) ---------- */
+.auth-buttons { display: flex; gap: 12px; }
+
 .auth-buttons a {
-    text-decoration: none !important; 
-    color: transparent;              
-    outline: none;                    
+    text-decoration: none !important;
+    outline: none;
+    color: transparent;
 }
 
-/* Boutons Login / Signup */
 .auth-buttons button {
-    padding: 8px 25px;
-    border-radius: 10px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border-radius: 999px;
     cursor: pointer;
-    margin-left: 10px;
+    transition: all 0.3s var(--ease);
+    border: 2px solid transparent;
 }
 
 .btn-login {
-    background-color: #007bff;
-    color: white;
-    border: 2px solid #007bff;
-    border: none;
+    background: var(--gold);
+    color: var(--text-dark);
+    border-color: var(--gold);
+    box-shadow: 0 4px 14px var(--gold-glow);
 }
 
-/* effet d'ombre quand on passe la souris dessus */
 .btn-login:hover {
-    background-color: #0056b3; 
-    border-color: #0056b3;
+    background: var(--gold-soft);
+    border-color: var(--gold-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px var(--gold-glow);
 }
 
 .btn-signup {
-    background-color: transparent;
-    border: 1px solid #cae4ff;
-    color: #cae4ff;
+    background: transparent;
+    color: var(--text);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-signup:hover {
-    background-color: #f0f4ff; 
-    border-color: #f0f4ff;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
 }
 
+/* ---------- Main / Grille cartes ---------- */
+main {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+    width: 100%;
+}
+
+/* ---------- Cartes événement ---------- */
+.card {
+    position: relative;
+    background: linear-gradient(160deg, #0e1f16 0%, #0a1410 60%, #050807 100%);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+    animation: cardIn 0.6s var(--ease) both;
+    cursor: pointer;
+}
+
+/* décalage d'apparition des cartes */
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.12s; }
+.card:nth-child(3) { animation-delay: 0.19s; }
+.card:nth-child(4) { animation-delay: 0.26s; }
+.card:nth-child(5) { animation-delay: 0.33s; }
+.card:nth-child(6) { animation-delay: 0.40s; }
+.card:nth-child(7) { animation-delay: 0.47s; }
+.card:nth-child(8) { animation-delay: 0.54s; }
+.card:nth-child(n+9) { animation-delay: 0.60s; }
+
+/* bande verte latérale */
+.card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--gold) 0%, var(--pitch-bright) 100%);
+    transform: scaleY(0.2);
+    transform-origin: top;
+    transition: transform 0.5s var(--ease);
+}
+
+/* halo or au survol */
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(ellipse at top right, var(--gold-glow), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+    pointer-events: none;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: var(--border);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border);
+}
+
+.card:hover::before { transform: scaleY(1); }
+.card:hover::after  { opacity: 1; }
+
+.card-content {
+    padding: 24px 22px 22px 26px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 10px;
+}
+
+.card h2 {
+    margin: 0 0 4px 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    text-transform: uppercase;
+    transition: color 0.3s var(--ease);
+}
+
+.card:hover h2 { color: var(--gold); }
+
+.card p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0 0 4px 0;
+}
+
+.card p strong { color: var(--text); font-weight: 600; }
+
+/* Bouton S'inscrire sur les cartes */
+.btn-register {
+    margin-top: auto;
+    background: transparent;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    padding: 12px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.3s var(--ease);
+    align-self: flex-start;
+}
+
+/* Quand le bouton est direct enfant de .card (comme dans ton main.js) */
+.card > .btn-register {
+    margin: 0 22px 22px 26px;
+}
+
+.btn-register::after {
+    content: " →";
+    display: inline-block;
+    transition: transform 0.3s var(--ease);
+}
+
+.btn-register:hover {
+    background: var(--gold);
+    color: var(--text-dark);
+    box-shadow: 0 6px 20px var(--gold-glow);
+}
+
+.btn-register:hover::after { transform: translateX(4px); }
+
+/* ---------- FAB Create Event ---------- */
 .fab-button {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    height: 56px;
-    padding: 0 24px;
-    background-color: #3f407a;
-    color: white;
-    border-radius: 28px;
+    height: 58px;
+    padding: 0 28px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+    color: var(--text-dark);
+    border-radius: 999px;
     text-decoration: none;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px var(--gold-glow), 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.35s var(--ease);
     z-index: 1000;
 
-    display: block;
-    line-height: 56px;
+    line-height: 58px;
     text-align: center;
+    white-space: nowrap;
 
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    font-weight: bold;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
 
-    margin: 0;
+.fab-button::before {
+    content: "+";
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1.5rem;
+    font-weight: 400;
+    vertical-align: middle;
+    line-height: 1;
+    transform: translateY(-1px);
+}
+
+.fab-button span {
+    vertical-align: middle;
 }
 
 .fab-button:hover {
-    background-color: #2e2f5e;
-    transform: translateY(-4px);
-    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 16px 40px var(--gold-glow), 0 6px 18px rgba(0, 0, 0, 0.5);
+    filter: brightness(1.05);
 }
 
-main {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 30px;
-
-    max-width: none;
-    width : 100%;
-    box-sizing: border-box;
-}
-
-/* Style d'une carte */
-.card {
-    background-color: #8b8bcc; 
-    border-radius: 15px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.card-content {
-    padding: 15px;
-}
-
-.card h2 {
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
-}
-
-.card p {
-    font-size: 0.9rem;
-    color: #333;
-}
-
-/* Bouton S'inscrire sur les cartes */
-.btn-register {
-    background-color: #3f407a;
-    color: white;
-    border: none;
-    padding: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: auto; 
-}
-
-.btn-register:hover {
-    background-color: #2e2f5e;
-}
-
-/* formulaire signup */
+/* ===================================================
+   PAGES AUTH (login / signup / create-event / payment)
+   =================================================== */
 .auth-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 40px 20px;
     margin: 0;
+    background-color: var(--bg-0);
+    background-image:
+        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(34, 197, 94, 0.22), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 100% 100%, rgba(229, 180, 67, 0.1), transparent 70%);
 }
 
 .auth-container {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+    background: linear-gradient(180deg, rgba(16, 42, 29, 0.85), rgba(10, 20, 16, 0.95));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    padding: 40px 34px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md), 0 0 60px rgba(34, 197, 94, 0.08);
     text-align: center;
-    width: 350px;
+    width: 100%;
+    max-width: 380px;
+    color: var(--text);
+    animation: fadeUp 0.7s var(--ease) both;
 }
 
-.auth-container input {
+.auth-container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pitch-bright), var(--gold), var(--pitch-bright));
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.auth-container h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.08em;
+    margin: 0 0 6px 0;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.auth-container h2::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: var(--gold);
+    margin: 10px auto 24px;
+    border-radius: 2px;
+}
+
+.auth-container input,
+.auth-container select {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 13px 16px;
+    margin: 8px 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.25s var(--ease);
+}
+
+.auth-container input::placeholder {
+    color: rgba(245, 245, 242, 0.45);
+}
+
+.auth-container input:focus,
+.auth-container select:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(229, 180, 67, 0.06);
+    box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.auth-container input[type="date"] { color-scheme: dark; }
+
+.auth-container label {
+    display: block;
+    text-align: left;
+    font-size: 0.78rem !important;
+    color: var(--gold-soft) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.auth-container hr {
+    border: none;
+    border-top: 1px solid var(--border-soft);
+    margin: 22px 0;
+}
+
+.auth-container form > .btn-login {
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    font-size: 0.9rem;
+}
+
+.auth-container p {
+    margin-top: 20px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.auth-container p a {
+    color: var(--gold);
+    font-weight: 600;
+    transition: color 0.2s var(--ease);
+}
+
+.auth-container p a:hover {
+    color: var(--gold-soft);
+    text-decoration: underline;
+}
+
+/* Sections dynamiques (create-event) */
+.dynamic-section {
+    background: rgba(34, 197, 94, 0.06) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 16px !important;
+    margin-top: 16px !important;
+    animation: fadeDown 0.4s var(--ease) both;
+}
+
+.dynamic-section label {
+    color: var(--gold) !important;
+}
+
+/* Champs date côte à côte */
+.auth-container form > div[style*="display: flex"] > div { text-align: left; }
+
+/* ---------- PAGE DÉTAILS ---------- */
+.details-page {
+    padding: 32px 40px;
+}
+
+#details-container {
+    max-width: 860px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, rgba(16, 42, 29, 0.7), rgba(10, 20, 16, 0.9));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+    color: var(--text);
+    animation: fadeUp 0.6s var(--ease) both;
+}
+
+#details-container h2,
+#details-container h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+#details-container p { color: var(--text-muted); line-height: 1.65; }
+#details-container strong { color: var(--text); }
+
+/* ---------- PAYMENT ---------- */
+.card-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 16px 0;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.form-row input { flex: 1; }
+
+#payment-summary {
+    background: rgba(229, 180, 67, 0.08);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin: 12px 0 20px;
+    color: var(--text);
+    font-size: 1rem;
+}
+
+#amount-display {
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+}
+
+/* Bouton "Payer maintenant" — override le vert en ligne HTML */
+.auth-container form > .btn-login[style*="28a745"] {
+    background: linear-gradient(135deg, var(--pitch-bright), #16a34a) !important;
+    border-color: var(--pitch-bright) !important;
+    color: #fff !important;
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35) !important;
+}
+
+.auth-container form > .btn-login[style*="28a745"]:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-0); }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--pitch), var(--pitch-line));
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ---------- Sélection texte ---------- */
+::selection {
+    background: var(--gold);
+    color: var(--text-dark);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+    body { padding: 20px 16px; }
+    header { flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 32px; }
+    .logo-box h1 { font-size: 1.3rem; }
+    main { grid-template-columns: 1fr; gap: 20px; }
+    .fab-button { bottom: 20px; right: 20px; padding: 0 20px; height: 52px; }
+    #details-container { padding: 24px; }
 }
