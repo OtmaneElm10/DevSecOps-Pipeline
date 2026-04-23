@@ -59,8 +59,11 @@ public class PaiementService {
      * get all payements.
      * @return a list of all Paiement entities.
      */
-    public List<Paiement> getAllPaiements() {
-        return paiementRepository.findAll();
+    public List<PaiementResponseDto> getAllPaiements() {
+        return paiementRepository.findAll()
+            .stream()
+            .map(this::toDto)
+            .toList();
     }
 
 
