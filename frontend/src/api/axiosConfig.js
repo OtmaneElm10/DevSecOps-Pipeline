@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8081/api', // L'adresse de ton Spring Boot
+    // J'ai fais des tests en local donc verifier avec les autres si c'est la bonne adresse 
+    // TODO: Mettre IP de la VM plus tard
+    baseURL: 'http://192.168.75.61/api', 
     headers: {
         'Content-Type': 'application/json'
     }

@@ -11,6 +11,9 @@ import com.eventapp.exception.AuthException.InvalidPasswordException;
 import com.eventapp.exception.AuthException.UserAlreadyExistsException;
 import com.eventapp.exception.AuthException.UserNotFoundException;
 import com.eventapp.exception.EventException.EventNotFoundException;
+import com.eventapp.exception.ReservationException.InvalidReservationException;
+import com.eventapp.exception.ReservationException.ReservationCapacityExceededException;
+import com.eventapp.exception.ReservationException.ReservationNotFoundException;
 
 /**
  * Global exception handler for the application.
@@ -81,4 +84,42 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("message", e.getMessage()));
     }
+
+    /**
+     * Handles reservation capacity exceeded exceptions.
+     * @param e exception
+     * @return HTTP 409 response
+     */
+    @ExceptionHandler(ReservationCapacityExceededException.class)
+    public ResponseEntity<Map<String, String>> handleCapacityExceeded(
+                final ReservationCapacityExceededException e) {       
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+    /**
+     * Handles invalid reservation exceptions.
+     * @param e exception
+     * @return HTTP 400 response
+     */
+    @ExceptionHandler(InvalidReservationException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidReservation(
+            final InvalidReservationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+    /**
+     * Handles reservation not found exceptions.
+     * @param e exception
+     * @return HTTP 404 response
+     */
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleReservationNotFound(
+            final ReservationNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+
 }

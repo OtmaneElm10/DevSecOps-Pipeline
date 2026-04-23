@@ -9,6 +9,7 @@ servers:
 
 tags:
   - name: Auth
+  - name: Users
   - name: Events
   - name: Reservations
   - name: Paiements
@@ -59,6 +60,30 @@ paths:
                 $ref: '#/components/schemas/UserResponse'
         '400':
           description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users/{username}:
+    get:
+      tags: [Users]
+      summary: Get user by username
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
           content:
             application/json:
               schema:
@@ -159,6 +184,102 @@ paths:
           description: Event deleted
         '404':
           description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/reservations:
+    get:
+      tags: [Reservations]
+      summary: Get all reservations
+      responses:
+        '200':
+          description: List of reservations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+    post:
+      tags: [Reservations]
+      summary: Create a new reservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationCreateRequest'
+      responses:
+        '201':
+          description: Reservation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '400':
+          description: Invalid reservation data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User or event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Not enough available places
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/reservations/user/{userId}:
+    get:
+      tags: [Reservations]
+      summary: Get reservations by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of reservations for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/reservations/{reservationId}:
+    delete:
+      tags: [Reservations]
+      summary: Cancel a reservation
+      parameters:
+        - name: reservationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Reservation deleted
+        '404':
+          description: Reservation not found
           content:
             application/json:
               schema:
@@ -282,3 +403,66 @@ components:
         - title
         - lieu
         - type
+
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: integer
+        nbPlaces:
+          type: integer
+        statut:
+          type: string
+        dateCreation:
+          type: string
+          format: date
+        montantAttendu:
+          type: number
+        user:
+          $ref: '#/components/schemas/UserReference'
+        event:
+          $ref: '#/components/schemas/EventReference'
+      required:
+        - id
+        - nbPlaces
+        - statut
+        - dateCreation
+        - user
+        - event
+
+    ReservationCreateRequest:
+      type: object
+      properties:
+        nbPlaces:
+          type: integer
+        statut:
+          type: string
+        dateCreation:
+          type: string
+          format: date
+        montantAttendu:
+          type: number
+        user:
+          $ref: '#/components/schemas/UserReference'
+        event:
+          $ref: '#/components/schemas/EventReference'
+      required:
+        - nbPlaces
+        - user
+        - event
+
+    UserReference:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+        - id
+
+    EventReference:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+        - id

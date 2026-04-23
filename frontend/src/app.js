@@ -14,8 +14,8 @@ const displayEvents = async () => {
         appDiv.innerHTML = events.map(event => `
             <div class="event-card">
                 <h2>${event.title}</h2>
-                <p>📍 ${event.lieu}</p>
-                <p>💰 ${event.prix} €</p>
+                <p>${event.lieu}</p>
+                <p>${event.prix} €</p>
             </div>
         `).join('');
 
