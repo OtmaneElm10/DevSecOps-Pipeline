@@ -11,6 +11,8 @@ import com.eventapp.exception.AuthException.InvalidPasswordException;
 import com.eventapp.exception.AuthException.UserAlreadyExistsException;
 import com.eventapp.exception.AuthException.UserNotFoundException;
 import com.eventapp.exception.EventException.EventNotFoundException;
+import com.eventapp.exception.PaiementException.InvalidPaymentException;
+import com.eventapp.exception.PaiementException.PaiementNotFoundException;
 import com.eventapp.exception.ReservationException.InvalidReservationException;
 import com.eventapp.exception.ReservationException.ReservationCapacityExceededException;
 import com.eventapp.exception.ReservationException.ReservationNotFoundException;
@@ -118,6 +120,30 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleReservationNotFound(
             final ReservationNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+    /**
+     * Handles paiement not found exceptions.
+     * @param e exception
+     * @return HTTP 404 response
+     */
+    @ExceptionHandler(PaiementNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePaiementNotFound(
+                final PaiementNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+    /**
+     * Handles invalid payment exceptions.
+     * @param e exception
+     * @return HTTP 400 response
+     */
+    @ExceptionHandler(InvalidPaymentException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidPayment(
+            final InvalidPaymentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("message", e.getMessage()));
     }
 
