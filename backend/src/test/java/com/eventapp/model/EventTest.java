@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import com.eventapp.model.entities.Event;
-import com.eventapp.model.entities.EventType;
+import com.eventapp.model.enums.EventType;
 
 class EventTest {
 

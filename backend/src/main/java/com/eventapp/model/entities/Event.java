@@ -2,6 +2,8 @@ package com.eventapp.model.entities;
 
 import java.time.LocalDate;
 
+import com.eventapp.model.enums.EventType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

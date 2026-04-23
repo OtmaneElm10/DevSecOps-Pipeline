@@ -1,5 +1,6 @@
 package com.eventapp.model.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -67,38 +68,42 @@ public class PaiementService {
     }
 
 
+
+
     /**
-     * create a new Paiement.
-     * @param request the DTO containing the information for the new Paiement.
-     * @return the created PaiementResponseDto.
-     */
+    * Create a payment for a reservation and mark the reservation as paid.
+    *
+    * @param request payment creation request
+    * @return created paiement response dto
+    */
     public PaiementResponseDto createPaiement(final PaiementCreateRequestDto request) {
         
-        if (request == null) {
-            throw new InvalidPaymentException("Paiement cannot be null");
-        }
-
-        if (request.getMontant() <= 0) {
-            throw new InvalidPaymentException("Montant must be greater than zero");
-        }
-
-        if (request.getReservationId() == null) {
-            throw new InvalidPaymentException("Reservation is required");
+        if (request == null || request.getReservationId() == null) {
+            throw new InvalidPaymentException("Reservation id is required");
         }
 
         Reservation reservation = reservationRepository.findById(request.getReservationId())
             .orElseThrow(ReservationNotFoundException::new);
 
+        if ("PAYEE".equals(reservation.getStatut())) {
+            throw new InvalidPaymentException("This reservation is already paid");
+        }
+        
         Paiement paiement = new Paiement();
-        paiement.setMontant(request.getMontant());
-        paiement.setStatut(request.getStatut());
-        paiement.setDatePaiement(request.getDatePaiement());
-        paiement.setReservation(reservation);   
+        paiement.setReservation(reservation);
+        paiement.setMontant(reservation.getMontantAttendu());
+        paiement.setStatut("PAYE");
+        paiement.setDatePaiement(LocalDate.now());
+        reservation.setStatut("PAYEE");
+
+        reservationRepository.save(reservation);
 
         return toDto(paiementRepository.save(paiement));
 
     }
 
+
+    
     
     /**
      * get a Paiement by its ID.

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.eventapp.model.entities.EventType;
+import com.eventapp.model.enums.EventType;
 
 class EventTypeTest {
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.eventapp.model.entities.Event;
-import com.eventapp.model.entities.EventType;
+import com.eventapp.model.enums.EventType;
 
 
 /**

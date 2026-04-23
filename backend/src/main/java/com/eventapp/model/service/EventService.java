@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.eventapp.exception.EventException.EventNotFoundException;
 
 import com.eventapp.model.entities.Event;
-import com.eventapp.model.entities.EventType;
+import com.eventapp.model.enums.EventType;
 import com.eventapp.repositories.EventRepository;
 
 /**

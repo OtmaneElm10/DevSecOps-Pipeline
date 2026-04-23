@@ -1,4 +1,4 @@
-package com.eventapp.model.entities;
+package com.eventapp.model.enums;
 
  
 /**

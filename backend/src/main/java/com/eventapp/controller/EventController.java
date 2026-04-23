@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventapp.model.entities.Event;
-import com.eventapp.model.entities.EventType;
+import com.eventapp.model.enums.EventType;
 import com.eventapp.model.service.EventService;
 
 

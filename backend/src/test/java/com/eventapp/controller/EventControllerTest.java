@@ -15,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.eventapp.model.entities.Event;
-import com.eventapp.model.entities.EventType;
+import com.eventapp.model.enums.EventType;
 import com.eventapp.model.service.EventService;
 
 @WebMvcTest(EventController.class)
