@@ -285,6 +285,88 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/paiements:
+    get:
+      tags: [Paiements]
+      summary: Get all payments
+      responses:
+        '200':
+          description: List of payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Paiement'
+    post:
+      tags: [Paiements]
+      summary: Create a new payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaiementCreateRequest'
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paiement'
+        '400':
+          description: Invalid payment data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Reservation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/paiements/{id}:
+    get:
+      tags: [Paiements]
+      summary: Get payment by ID
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Payment found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paiement'
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/paiements/{id}/status:
+    get:
+      tags: [Paiements]
+      summary: Get payment status by ID
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Payment status found
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   parameters:
     IdPathParam:
@@ -460,6 +542,50 @@ components:
         - id
 
     EventReference:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+        - id
+
+    Paiement:
+      type: object
+      properties:
+        id:
+          type: integer
+        montant:
+          type: number
+        statut:
+          type: string
+        datePaiement:
+          type: string
+          format: date
+        reservation:
+          $ref: '#/components/schemas/ReservationReference'
+      required:
+        - id
+        - montant
+        - statut
+        - reservation
+
+    PaiementCreateRequest:
+      type: object
+      properties:
+        montant:
+          type: number
+        statut:
+          type: string
+        datePaiement:
+          type: string
+          format: date
+        reservation:
+          $ref: '#/components/schemas/ReservationReference'
+      required:
+        - montant
+        - reservation
+
+    ReservationReference:
       type: object
       properties:
         id:
