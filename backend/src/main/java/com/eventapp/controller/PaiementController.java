@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eventapp.model.entities.Paiement;
+import com.eventapp.model.dto.PaiementCreateRequestDto;
+import com.eventapp.model.dto.PaiementResponseDto;
 import com.eventapp.model.service.PaiementService;
 
 
@@ -38,7 +39,7 @@ public class PaiementController {
 
 
     @GetMapping
-    public ResponseEntity<List<Paiement>> getAllPaiements() {
+    public ResponseEntity<List<PaiementResponseDto>> getAllPaiements() {
         return ResponseEntity.ok(paiementService.getAllPaiements());
     }
 
@@ -48,7 +49,7 @@ public class PaiementController {
      * @return the Paiement entity with the specified ID.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Paiement> getPaiementById(@PathVariable final Long id) {
+    public ResponseEntity<PaiementResponseDto> getPaiementById(@PathVariable final Long id) {
         return ResponseEntity.ok(paiementService.getPaiementById(id));
     }
 
@@ -67,17 +68,15 @@ public class PaiementController {
     
     /**
      * create a new Paiement.
-     * @param paiement
-     * @return
+     * @param request the DTO containing the information for the new Paiement.
+     * @return the dto of the created Paiement entity.
      */
     @PostMapping
-    public ResponseEntity<Paiement> createPaiement(@RequestBody final Paiement paiement) {
+    public ResponseEntity<PaiementResponseDto> createPaiement(
+        @RequestBody final PaiementCreateRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(paiementService.createPaiement(paiement));
+            .body(paiementService.createPaiement(request));
     }
-
-
-
 
 
 }
