@@ -6,42 +6,51 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="auth-page">
+    <div class="auth-container">
+        <h2>Créer un compte</h2>
+        <form id="signup-form">
+            <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <button type="submit" class="btn-login">S'inscrire</button>
+        </form>
+        <p><a href="index.html">← Retour à l'accueil</a></p>
+    </div>
 
-<div class="auth-container">
-    <h2>Créer un compte</h2>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-    <form id="signup-form">
-        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Mot de passe" required>
-        <button type="submit" class="btn-login">S'inscrire</button>
-    </form>
+            const signupData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
 
-    <p><a href="index.html">← Retour à l'accueil</a></p>
-</div>
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(signupData)
+                });
 
-<script type="module">
-import { register } from './authApi.js';
+                if (response.ok) {
+                    const user = await response.json();
 
-document.getElementById('signup-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
+                    alert("Inscription réussie !");
+                    window.location.href = "login.html";
+                } else {
+                    const errorMessage = await response.text();
+                    alert("Erreur : " + errorMessage);
+                }
 
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    try {
-        const result = await register(username, email, password);
-        console.log("Utilisateur créé :", result);
-
-        alert("Compte créé avec succès !");
-        window.location.href = "login.html";
-    } catch (err) {
-        console.error("Erreur lors de l'inscription :", err);
-        alert("Erreur lors de l'inscription.");
-    }
-});
-</script>
-
+            } catch (error) {
+                console.error("Erreur réseau :", error);
+                alert("Impossible de contacter le serveur.");
+            }
+        });
+    </script>
 </body>
 </html>
