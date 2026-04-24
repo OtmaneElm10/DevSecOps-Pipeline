@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.eventapp.exception.AuthException.InvalidPasswordException;
+import com.eventapp.exception.AuthException.InvalidPasswordExceptionTest;
 import com.eventapp.exception.AuthException.UserAlreadyExistsException;
 import com.eventapp.exception.AuthException.UserNotFoundException;
 import com.eventapp.exception.EventException.EventNotFoundException;
@@ -54,9 +54,9 @@ public class GlobalExceptionHandler {
      * @param e exception
      * @return HTTP 401 response
      */
-    @ExceptionHandler(InvalidPasswordException.class)
+    @ExceptionHandler(InvalidPasswordExceptionTest.class)
     public ResponseEntity<Map<String, String>> handleInvalidPassword(
-            final InvalidPasswordException e) {
+            final InvalidPasswordExceptionTest e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", e.getMessage()));
     }
