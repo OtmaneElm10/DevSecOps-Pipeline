@@ -5,6 +5,6 @@ package com.eventapp.model.enums;
  */
 public enum PaiementStatut {
     EN_ATTENTE,
-    PAYE,
-    REFUSE
+    EFFECTUE,
+    ANNULE
 }

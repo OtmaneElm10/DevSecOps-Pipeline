@@ -2,8 +2,12 @@ package com.eventapp.model.entities;
 
 import java.time.LocalDate;
 
+import com.eventapp.model.enums.ReservationStatut;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +30,8 @@ public class Reservation {
     private int nbPlaces;
 
     @Column(nullable = false)
-    private String statut;
+    @Enumerated(EnumType.STRING)
+    private ReservationStatut statut;
 
     @Column(nullable = false)
     private LocalDate dateCreation;
@@ -55,7 +60,7 @@ public class Reservation {
      * @param dateCreation the creation date
      * @param montantAttendu the expected amount
      */
-    public Reservation(final int nbPlaces, final String statut,
+    public Reservation(final int nbPlaces, final ReservationStatut statut,
                        final LocalDate dateCreation, final double montantAttendu) {
         this.nbPlaces = nbPlaces;
         this.statut = statut;
@@ -71,7 +76,7 @@ public class Reservation {
         return nbPlaces;
     }
 
-    public String getStatut() {
+    public ReservationStatut getStatut() {
         return statut;
     }
 
@@ -99,7 +104,7 @@ public class Reservation {
         this.nbPlaces = nbPlaces;
     }
 
-    public void setStatut(final String statut) {
+    public void setStatut(final ReservationStatut statut) {
         this.statut = statut;
     }
 

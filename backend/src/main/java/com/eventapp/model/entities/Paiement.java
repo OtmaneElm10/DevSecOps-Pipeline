@@ -1,8 +1,12 @@
 package com.eventapp.model.entities;
 import java.time.LocalDate;
 
+import com.eventapp.model.enums.PaiementStatut;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,9 +30,10 @@ public class Paiement {
     private double montant;
 
     @Column(nullable = false)
-    private String statut;
+    @Enumerated(EnumType.STRING)
+    private PaiementStatut statut;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate datePaiement;
 
     @OneToOne
@@ -48,10 +53,13 @@ public class Paiement {
      * @param statut the payment status
      * @param datePaiement the payment date
      */
-    public Paiement(final double montant, final String statut, final LocalDate datePaiement) {
+    public Paiement(final double montant, 
+        final PaiementStatut statut, final LocalDate datePaiement,
+        final Reservation reservation) {
         this.montant = montant;
         this.statut = statut;
         this.datePaiement = datePaiement;
+        this.reservation = reservation;
     }
 
     public Long getId() {
@@ -62,7 +70,7 @@ public class Paiement {
         return montant;
     }
 
-    public String getStatut() {
+    public PaiementStatut getStatut() {
         return statut;
     }
 
@@ -82,7 +90,7 @@ public class Paiement {
         this.montant = montant;
     }
 
-    public void setStatut(final String statut) {
+    public void setStatut(final PaiementStatut statut) {
         this.statut = statut;
     }
 
