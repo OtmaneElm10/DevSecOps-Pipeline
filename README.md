@@ -1,36 +1,71 @@
-# G17 app
+# G17 — Application de gestion d'événements participatifs
 
-Application web de gestion d'événements participatifs.
+Application web de gestion de tournois et d'événements pour un club sportif.
 
-## Stack technique
-- **Back-end** : Java Spring Boot
-- **Front-end** : JavaScript (Vanilla JS)
-- **Base de données** : MySQL / PostgreSQL
-- **Déploiement** : VM Linux + Nginx
+---
 
-## Pour lancer le projet
+## Outils et framework
 
-### Back-end
+### Back-End
+| Outil | Rôle |
+|---|---|
+| Java | Langage principal |
+| Spring Boot | Framework applicatif et création des API REST |
+| Maven | Gestion des dépendances et build |
+| JUnit + Mockito | Tests unitaires |
+
+### Front-End
+| Outil | Rôle |
+|---|---|
+| HTML / CSS / JavaScript | Architecture standard |
+| Fetch API | Appels vers le back-end |
+
+### Infrastructure
+| Outil | Rôle |
+|---|---|
+| GitLab CI | Pipeline CI/CD |
+| SonarQube | Analyse qualité du code |
+| Nginx | Reverse proxy sur la VM |
+| MySQL | Base de données de production |
+
+---
+
+## Guide : Lancer le projet en local
+
+### 1. Cloner le dépôt
+
+```bash
+git clone https://gitlab.com/g17/projettransversal2025-mif10.git
+cd projettransversal2025-mif10
+```
+
+### 2. Lancer le back-end
+
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-### Front-end
+### 3. Lancer le front-end
 
-**vérifiez que le port 3000 est bien libre sur votre ordi!!!!**
-
+Vérifiez que le port **3000 est libre** sur votre machine avant de lancer.
 
 ```bash
-cd frontend
+cd frontend/public
 python -m http.server 3000
 ```
+Le front-end est disponible sur `http://localhost:3000`.
 
-**Pour avoir acces à la page front il suffit de cliquer sur /public ou directement vous placez dans le repertoire public avant d'utiliser la commande python**
+### 4. Tester l'application complète
 
-**Pour tester avec le backend il faut lancer spring-boot sur un terminal et python sur un autre en simultané et normalement les evenements apparaissent**
+Les deux commandes doivent tourner en parallèle dans deux terminaux distincts.
 
+---
 
-## Déploiement
+## Lien pour la VM de démo
 
-- **A voir**
+L'application est déployée et accessible à l'adresse suivante :
+
+```
+http://192.168.75.61
+```
