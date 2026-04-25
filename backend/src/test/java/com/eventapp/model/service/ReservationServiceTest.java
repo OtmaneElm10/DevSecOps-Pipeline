@@ -195,7 +195,7 @@ class ReservationServiceTest {
 
     @Test
     void cancelReservationShouldThrowWhenNotFound() {
-        when(reservationRepository.findById(99L)).thenReturn(false);
+        when(reservationRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> reservationService.cancelReservation(99L))
                 .isInstanceOf(ReservationNotFoundException.class);
