@@ -2,7 +2,7 @@ package com.eventapp.model.service;
 
 import org.springframework.stereotype.Service;
 
-import com.eventapp.exception.AuthException.InvalidPasswordExceptionTest;
+import com.eventapp.exception.AuthException.InvalidPasswordException;
 import com.eventapp.exception.AuthException.UserAlreadyExistsException;
 import com.eventapp.exception.AuthException.UserNotFoundException;
 import com.eventapp.model.entities.User;
@@ -61,7 +61,7 @@ public class AuthService {
             .orElseThrow(UserNotFoundException::new);
         
         if (!user.getPassword().equals(password)) {
-            throw new InvalidPasswordExceptionTest();
+            throw new InvalidPasswordException();
         }
 
         return user;
