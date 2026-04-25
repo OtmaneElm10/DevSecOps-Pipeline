@@ -2,6 +2,8 @@ package com.eventapp.model.dto;
 
 import java.time.LocalDate;
 
+import com.eventapp.model.enums.PaiementStatut;
+
 /**
 
  * DTO returned for payment responses.
@@ -12,7 +14,7 @@ public class PaiementResponseDto {
 
     private Long id;
     private double montant;
-    private String statut;
+    private PaiementStatut statut;
     private LocalDate datePaiement;
     private Long reservationId;
 
@@ -43,12 +45,12 @@ public class PaiementResponseDto {
 
     }
 
-    public String getStatut() {
+    public PaiementStatut getStatut() {
         return statut;
 
     }
 
-    public void setStatut(final String statut) {
+    public void setStatut(final PaiementStatut statut) {
         this.statut = statut;
 
     }

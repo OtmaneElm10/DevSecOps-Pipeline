@@ -2,6 +2,8 @@ package com.eventapp.model.dto;
 
 import java.time.LocalDate;
 
+import com.eventapp.model.enums.ReservationStatut;
+
 /**
  * DTO returned for reservation responses.
  */
@@ -9,7 +11,7 @@ public class ReservationResponseDto {
 
     private Long id;
     private int nbPlaces;
-    private String statut;
+    private ReservationStatut statut;
     private LocalDate dateCreation;
     private double montantAttendu;
     private Long userId;
@@ -31,7 +33,7 @@ public class ReservationResponseDto {
         return nbPlaces;
     }
 
-    public String getStatut() {
+    public ReservationStatut getStatut() {
         return statut;
     }
 
@@ -67,7 +69,7 @@ public class ReservationResponseDto {
         this.nbPlaces = nbPlaces;
     }
 
-    public void setStatut(final String statut) {
+    public void setStatut(final ReservationStatut statut) {
         this.statut = statut;
     }
 

@@ -1,5 +1,6 @@
 package com.eventapp.model.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,9 +14,12 @@ import com.eventapp.model.dto.ReservationResponseDto;
 import com.eventapp.model.entities.Event;
 import com.eventapp.model.entities.Reservation;
 import com.eventapp.model.entities.User;
+import com.eventapp.model.enums.ReservationStatut;
 import com.eventapp.repositories.EventRepository;
 import com.eventapp.repositories.ReservationRepository;
 import com.eventapp.repositories.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 /**
  * Reservation service.
@@ -24,8 +28,10 @@ import com.eventapp.repositories.UserRepository;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final PaiementService paiementService;
 
     /**
      * Constructor.
@@ -33,14 +39,18 @@ public class ReservationService {
      * @param reservationRepository reservation repository
      * @param userRepository user repository
      * @param eventRepository event repository
+     * @param paiementService payment service
      */
     public ReservationService(
             final ReservationRepository reservationRepository,
             final UserRepository userRepository,
-            final EventRepository eventRepository) {
+            final EventRepository eventRepository,
+            final PaiementService paiementService) {
+        
         this.reservationRepository = reservationRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
+        this.paiementService = paiementService;
     }
 
     /**
@@ -65,6 +75,7 @@ public class ReservationService {
      * @throws EventNotFoundException if the event does not exist
      * @throws ReservationCapacityExceededException if event capacity is exceeded
      */
+    @Transactional
     public Reservation createReservation(final Reservation reservation) {
 
         if (reservation.getNbPlaces() <= 0) {
@@ -87,12 +98,7 @@ public class ReservationService {
         Event event = eventRepository.findById(reservation.getEvent().getId())
                 .orElseThrow(EventNotFoundException::new);
 
-        int reservedPlaces = reservationRepository.findByEventId(event.getId())
-                .stream()
-                .mapToInt(Reservation::getNbPlaces)
-                .sum();
-
-        if (reservedPlaces + reservation.getNbPlaces() > event.getCapaciteMax()) {
+        if (event.getNbInscrits() + reservation.getNbPlaces() > event.getCapaciteMax()) {
             throw new ReservationCapacityExceededException();
         }
 
@@ -101,8 +107,15 @@ public class ReservationService {
 
         reservation.setUser(user);
         reservation.setEvent(event);
+        reservation.setDateCreation(LocalDate.now());
+        reservation.setStatut(ReservationStatut.EN_ATTENTE_DE_PAIEMENT);
+        reservation.setMontantAttendu(event.getPrix() * reservation.getNbPlaces());
+        
+        Reservation savedReservation = reservationRepository.save(reservation);
 
-        return reservationRepository.save(reservation);
+        paiementService.createPendingPaiement(savedReservation);
+
+        return savedReservation;
     }
 
     /**
@@ -128,15 +141,29 @@ public class ReservationService {
      *
      * @param reservationId reservation ID to cancel
      */
+    @Transactional
     public void cancelReservation(final Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(ReservationNotFoundException::new);
+            .orElseThrow(ReservationNotFoundException::new);
+
+        if (ReservationStatut.ANNULEE.equals(reservation.getStatut())) {
+            throw new InvalidReservationException("Reservation is already cancelled");
+        }
+
+        if (ReservationStatut.PAYEE.equals(reservation.getStatut())) {
+            throw new InvalidReservationException("Cannot cancel a paid reservation");
+        }        
 
         Event event = reservation.getEvent();
-        event.setNbInscrits(event.getNbInscrits() - reservation.getNbPlaces());
+        int newNbInscrits = event.getNbInscrits() - reservation.getNbPlaces();
+
+        event.setNbInscrits(Math.max(newNbInscrits, 0));
         eventRepository.save(event);
 
-        reservationRepository.delete(reservation);
+        paiementService.cancelPendingPaiement(reservationId);
+        reservation.setStatut(ReservationStatut.ANNULEE);
+
+        reservationRepository.save(reservation);
     }
 
     /**

@@ -23,7 +23,8 @@ class UserNotFoundExceptionTest {
 
     @Test
     void shouldBeThrownAndCaught() {
-        assertThatThrownBy(() -> { throw new UserNotFoundException(); })
+        assertThatThrownBy(() -> { 
+            throw new UserNotFoundException(); })
             .isInstanceOf(UserNotFoundException.class)
             .hasMessage("User not found");
     }

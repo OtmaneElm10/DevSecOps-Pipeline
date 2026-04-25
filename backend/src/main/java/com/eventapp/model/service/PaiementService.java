@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 import com.eventapp.exception.PaiementException.InvalidPaymentException;
 import com.eventapp.exception.PaiementException.PaiementNotFoundException;
 import com.eventapp.exception.ReservationException.ReservationNotFoundException;
-import com.eventapp.model.dto.PaiementCreateRequestDto;
 import com.eventapp.model.dto.PaiementResponseDto;
 import com.eventapp.model.entities.Paiement;
-
 import com.eventapp.model.entities.Reservation;
-
+import com.eventapp.model.enums.PaiementStatut;
+import com.eventapp.model.enums.ReservationStatut;
 import com.eventapp.repositories.PaiementRepository;
-
 import com.eventapp.repositories.ReservationRepository;
+
+import jakarta.transaction.Transactional;
 
 
 /**
@@ -67,43 +67,61 @@ public class PaiementService {
             .toList();
     }
 
+    /**
+     * get all payements for a given user ID.
+     * @param userId the ID of the user whose payements are to be retrieved.
+     * @return a list of all Paiement entities for the given user ID.
+     */
+    public List<PaiementResponseDto> getPaiementsByUserId(final Long userId) {
+        return paiementRepository.findByReservationUserId(userId)
+            .stream()
+            .map(this::toDto)
+            .toList();
+    }
+
 
 
 
     /**
-    * Create a payment for a reservation and mark the reservation as paid.
+    * pay a reservation by creating a Paiement entity.
     *
-    * @param request payment creation request
+    * @param reservationId the ID of the reservation to be paid.
     * @return created paiement response dto
     */
-    public PaiementResponseDto createPaiement(final PaiementCreateRequestDto request) {
-        
-        if (request == null || request.getReservationId() == null) {
+    @Transactional
+    public PaiementResponseDto payReservation(final Long reservationId) {
+
+        if (reservationId == null) {
             throw new InvalidPaymentException("Reservation id is required");
         }
 
-        Reservation reservation = reservationRepository.findById(request.getReservationId())
+        Reservation reservation = reservationRepository.findById(reservationId)
             .orElseThrow(ReservationNotFoundException::new);
 
-        if ("PAYEE".equals(reservation.getStatut())) {
+        if (ReservationStatut.PAYEE.equals(reservation.getStatut())) {
             throw new InvalidPaymentException("This reservation is already paid");
         }
-        
-        Paiement paiement = new Paiement();
-        paiement.setReservation(reservation);
-        paiement.setMontant(reservation.getMontantAttendu());
-        paiement.setStatut("PAYE");
+
+        if (ReservationStatut.ANNULEE.equals(reservation.getStatut())) {
+            throw new InvalidPaymentException("Cannot pay for a cancelled reservation");
+        }
+
+        Paiement paiement = paiementRepository.findByReservationId(reservationId)
+            .orElseThrow(() -> new InvalidPaymentException(
+                "No payment found for this reservation"
+            ));
+
+        if (PaiementStatut.EFFECTUE.equals(paiement.getStatut())) {
+            throw new InvalidPaymentException("Payment already done");
+        }
+
+        paiement.setStatut(PaiementStatut.EFFECTUE);
         paiement.setDatePaiement(LocalDate.now());
-        reservation.setStatut("PAYEE");
+        reservation.setStatut(ReservationStatut.PAYEE);
 
-        reservationRepository.save(reservation);
-
-        return toDto(paiementRepository.save(paiement));
-
+        return toDto(paiement);
     }
 
-
-    
     
     /**
      * get a Paiement by its ID.
@@ -115,6 +133,41 @@ public class PaiementService {
             .orElseThrow(PaiementNotFoundException::new);
         
         return toDto(paiement);
+    }
+
+    
+    /**
+     * create a pending Paiement for a given Reservation.
+     * @param reservation the Reservation for which the pending Paiement is to be created.
+     */
+    public void createPendingPaiement(final Reservation reservation) {
+        Paiement paiement = new Paiement();
+
+        paiement.setReservation(reservation);
+        paiement.setMontant(reservation.getMontantAttendu());
+        paiement.setStatut(PaiementStatut.EN_ATTENTE);
+        paiement.setDatePaiement(null);
+
+        paiementRepository.save(paiement);
+    }
+
+    
+    /**
+     * Cancel a pending Paiement for a given reservation ID.
+     * @param reservationId the ID of the reservation 
+     * for which the pending Paiement is to be cancelled.
+     */
+    public void cancelPendingPaiement(final Long reservationId) {
+        Paiement paiement = paiementRepository.findByReservationId(reservationId)
+            .orElseThrow(() -> new InvalidPaymentException(
+                    "No payment found for this reservation"));
+
+        if (PaiementStatut.EFFECTUE.equals(paiement.getStatut())) {
+            throw new InvalidPaymentException("Cannot cancel an already completed payment");
+        }
+
+        paiement.setStatut(PaiementStatut.ANNULE);
+
     }
 
 

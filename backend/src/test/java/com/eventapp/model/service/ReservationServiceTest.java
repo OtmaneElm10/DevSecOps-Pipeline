@@ -23,6 +23,7 @@ import com.eventapp.exception.ReservationException.ReservationNotFoundException;
 import com.eventapp.model.entities.Event;
 import com.eventapp.model.entities.Reservation;
 import com.eventapp.model.entities.User;
+import com.eventapp.model.enums.ReservationStatut;
 import com.eventapp.repositories.EventRepository;
 import com.eventapp.repositories.ReservationRepository;
 import com.eventapp.repositories.UserRepository;
@@ -39,6 +40,9 @@ class ReservationServiceTest {
     @Mock
     private EventRepository eventRepository;
 
+    @Mock
+    private PaiementService paiementService;
+
     @InjectMocks
     private ReservationService reservationService;
 
@@ -53,6 +57,8 @@ class ReservationServiceTest {
         Event event = new Event();
         event.setId(id);
         event.setCapaciteMax(capaciteMax);
+        event.setPrix(10.0);
+        event.setNbInscrits(0);
         return event;
     }
 
@@ -105,6 +111,7 @@ class ReservationServiceTest {
     void createReservationShouldThrowWhenUserIdIsNull() {
         User user = new User();
         user.setId(null);
+
         Reservation r = buildReservation(user, buildEvent(1L, 10), 2);
 
         assertThatThrownBy(() -> reservationService.createReservation(r))
@@ -125,8 +132,21 @@ class ReservationServiceTest {
     }
 
     @Test
+    void createReservationShouldThrowWhenEventIdIsNull() {
+        Event event = new Event();
+        event.setId(null);
+
+        Reservation r = buildReservation(buildUser(1L), event, 2);
+
+        assertThatThrownBy(() -> reservationService.createReservation(r))
+                .isInstanceOf(InvalidReservationException.class)
+                .hasMessage("Event is required");
+    }
+
+    @Test
     void createReservationShouldThrowWhenUserNotFound() {
         Reservation r = buildReservation(buildUser(1L), buildEvent(1L, 10), 2);
+
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> reservationService.createReservation(r))
@@ -136,6 +156,7 @@ class ReservationServiceTest {
     @Test
     void createReservationShouldThrowWhenEventNotFound() {
         Reservation r = buildReservation(buildUser(1L), buildEvent(1L, 10), 2);
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(buildUser(1L)));
         when(eventRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -147,14 +168,12 @@ class ReservationServiceTest {
     void createReservationShouldThrowWhenCapacityExceeded() {
         User user = buildUser(1L);
         Event event = buildEvent(1L, 5);
-        Reservation r = buildReservation(user, event, 3);
+        event.setNbInscrits(4);
 
-        Reservation existing = new Reservation();
-        existing.setNbPlaces(4);
+        Reservation r = buildReservation(user, event, 3);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
-        when(reservationRepository.findByEventId(1L)).thenReturn(List.of(existing));
 
         assertThatThrownBy(() -> reservationService.createReservation(r))
                 .isInstanceOf(ReservationCapacityExceededException.class);
@@ -164,17 +183,29 @@ class ReservationServiceTest {
     void createReservationShouldSaveAndReturn() {
         User user = buildUser(1L);
         Event event = buildEvent(1L, 10);
+        event.setPrix(12.0);
+        event.setNbInscrits(0);
+
         Reservation r = buildReservation(user, event, 2);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
-        when(reservationRepository.findByEventId(1L)).thenReturn(List.of());
         when(reservationRepository.save(any(Reservation.class))).thenReturn(r);
 
         Reservation result = reservationService.createReservation(r);
 
         assertThat(result.getNbPlaces()).isEqualTo(2);
+        assertThat(result.getUser()).isEqualTo(user);
+        assertThat(result.getEvent()).isEqualTo(event);
+        assertThat(result.getStatut()).isEqualTo(ReservationStatut.EN_ATTENTE_DE_PAIEMENT);
+        assertThat(result.getMontantAttendu()).isEqualTo(24.0);
+        assertThat(result.getDateCreation()).isNotNull();
+
+        assertThat(event.getNbInscrits()).isEqualTo(2);
+
+        verify(eventRepository).save(event);
         verify(reservationRepository).save(r);
+        verify(paiementService).createPendingPaiement(r);
     }
 
     @Test
@@ -202,21 +233,52 @@ class ReservationServiceTest {
     }
 
     @Test
-    void cancelReservationShouldDeleteWhenFound() {
-        Event mockEvent = new Event();
-        mockEvent.setId(1L);
-        mockEvent.setNbInscrits(5);
+    void cancelReservationShouldThrowWhenAlreadyCancelled() {
+        Reservation reservation = new Reservation();
+        reservation.setId(1L);
+        reservation.setStatut(ReservationStatut.ANNULEE);
 
-        Reservation mockReservation = new Reservation();
-        mockReservation.setId(1L);
-        mockReservation.setNbPlaces(2);
-        mockReservation.setEvent(mockEvent);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
 
-        when(reservationRepository.findById(1L)).thenReturn(Optional.of(mockReservation));
+        assertThatThrownBy(() -> reservationService.cancelReservation(1L))
+                .isInstanceOf(InvalidReservationException.class)
+                .hasMessage("Reservation is already cancelled");
+    }
+
+    @Test
+    void cancelReservationShouldThrowWhenAlreadyPaid() {
+        Reservation reservation = new Reservation();
+        reservation.setId(1L);
+        reservation.setStatut(ReservationStatut.PAYEE);
+
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+
+        assertThatThrownBy(() -> reservationService.cancelReservation(1L))
+                .isInstanceOf(InvalidReservationException.class)
+                .hasMessage("Cannot cancel a paid reservation");
+    }
+
+    @Test
+    void cancelReservationShouldCancelReservationAndPayment() {
+        Event event = new Event();
+        event.setId(1L);
+        event.setNbInscrits(5);
+
+        Reservation reservation = new Reservation();
+        reservation.setId(1L);
+        reservation.setNbPlaces(2);
+        reservation.setEvent(event);
+        reservation.setStatut(ReservationStatut.EN_ATTENTE_DE_PAIEMENT);
+
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
 
         reservationService.cancelReservation(1L);
 
-        verify(eventRepository).save(mockEvent);
-        verify(reservationRepository).delete(mockReservation);
+        assertThat(reservation.getStatut()).isEqualTo(ReservationStatut.ANNULEE);
+        assertThat(event.getNbInscrits()).isEqualTo(3);
+
+        verify(eventRepository).save(event);
+        verify(paiementService).cancelPendingPaiement(1L);
+        verify(reservationRepository).save(reservation);
     }
 }

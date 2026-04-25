@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import com.eventapp.model.entities.Event;
 import com.eventapp.model.entities.Reservation;
 import com.eventapp.model.entities.User;
+import com.eventapp.model.enums.ReservationStatut;
 
 class ReservationTest {
 
@@ -16,10 +17,10 @@ class ReservationTest {
     void constructorShouldSetAllFields() {
         LocalDate date = LocalDate.now();
 
-        Reservation reservation = new Reservation(5, "Confirmée", date, 50.0);
+        Reservation reservation = new Reservation(5, ReservationStatut.PAYEE, date, 50.0);
 
         assertThat(reservation.getNbPlaces()).isEqualTo(5);
-        assertThat(reservation.getStatut()).isEqualTo("Confirmée");
+        assertThat(reservation.getStatut()).isEqualTo(ReservationStatut.PAYEE);
         assertThat(reservation.getDateCreation()).isEqualTo(date);
         assertThat(reservation.getMontantAttendu()).isEqualTo(50.0);
     }
@@ -46,7 +47,7 @@ class ReservationTest {
 
         reservation.setId(1L);
         reservation.setNbPlaces(10);
-        reservation.setStatut("Annulée");
+        reservation.setStatut(ReservationStatut.ANNULEE);
         reservation.setDateCreation(date);
         reservation.setMontantAttendu(100.0);
         reservation.setUser(user);
@@ -54,7 +55,7 @@ class ReservationTest {
 
         assertThat(reservation.getId()).isEqualTo(1L);
         assertThat(reservation.getNbPlaces()).isEqualTo(10);
-        assertThat(reservation.getStatut()).isEqualTo("Annulée");
+        assertThat(reservation.getStatut()).isEqualTo(ReservationStatut.ANNULEE);
         assertThat(reservation.getDateCreation()).isEqualTo(date);
         assertThat(reservation.getMontantAttendu()).isEqualTo(100.0);
         assertThat(reservation.getUser()).isEqualTo(user);
