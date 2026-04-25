@@ -205,6 +205,7 @@ paths:
     post:
       tags: [Reservations]
       summary: Create a new reservation
+      description: Creates a reservation with status EN_ATTENTE_DE_PAIEMENT, calculates montantAttendu, increments event nbInscrits, and automatically creates a linked payment with status EN_ATTENTE.
       requestBody:
         required: true
         content:
@@ -268,6 +269,7 @@ paths:
     delete:
       tags: [Reservations]
       summary: Cancel a reservation
+      description: Cancels a reservation by setting its status to ANNULEE, decrements event nbInscrits, and cancels the linked pending payment.
       parameters:
         - name: reservationId
           in: path
@@ -277,7 +279,13 @@ paths:
             format: int64
       responses:
         '204':
-          description: Reservation deleted
+          description: Reservation cancelled
+        '400':
+          description: Reservation already cancelled or already paid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Reservation not found
           content:
@@ -298,34 +306,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Paiement'
-    post:
-      tags: [Paiements]
-      summary: Create a new payment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PaiementCreateRequest'
-      responses:
-        '201':
-          description: Payment created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Paiement'
-        '400':
-          description: Invalid payment data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Reservation not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /api/paiements/{id}:
     get:
@@ -359,9 +339,62 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/PaiementStatut'
         '404':
           description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/paiements/user/{userId}:
+    get:
+      tags: [Paiements]
+      summary: Get payment history by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of payments for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Paiement'
+
+  /api/paiements/reservation/{reservationId}/pay:
+    post:
+      tags: [Paiements]
+      summary: Pay a reservation
+      description: Updates the existing payment linked to the reservation from EN_ATTENTE to EFFECTUE and updates the reservation status to PAYEE.
+      parameters:
+        - name: reservationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Reservation paid successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paiement'
+        '400':
+          description: Invalid payment operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Reservation or payment not found
           content:
             application/json:
               schema:
@@ -416,6 +449,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
         username:
           type: string
         email:
@@ -431,11 +465,26 @@ components:
         - STAGE
         - SOIREE
 
+    ReservationStatut:
+      type: string
+      enum:
+        - EN_ATTENTE_DE_PAIEMENT
+        - PAYEE
+        - ANNULEE
+
+    PaiementStatut:
+      type: string
+      enum:
+        - EN_ATTENTE
+        - EFFECTUE
+        - ANNULE
+
     Event:
       type: object
       properties:
         id:
           type: integer
+          format: int64
         title:
           type: string
         description:
@@ -452,6 +501,9 @@ components:
           type: integer
         prix:
           type: number
+          format: double
+        nbInscrits:
+          type: integer
         type:
           $ref: '#/components/schemas/EventType'
       required:
@@ -479,6 +531,7 @@ components:
           type: integer
         prix:
           type: number
+          format: double
         type:
           $ref: '#/components/schemas/EventType'
       required:
@@ -491,39 +544,41 @@ components:
       properties:
         id:
           type: integer
+          format: int64
         nbPlaces:
           type: integer
         statut:
-          type: string
+          $ref: '#/components/schemas/ReservationStatut'
         dateCreation:
           type: string
           format: date
         montantAttendu:
           type: number
-        user:
-          $ref: '#/components/schemas/UserReference'
-        event:
-          $ref: '#/components/schemas/EventReference'
+          format: double
+        userId:
+          type: integer
+          format: int64
+        username:
+          type: string
+        eventId:
+          type: integer
+          format: int64
+        eventTitle:
+          type: string
       required:
         - id
         - nbPlaces
         - statut
         - dateCreation
-        - user
-        - event
+        - montantAttendu
+        - userId
+        - eventId
 
     ReservationCreateRequest:
       type: object
       properties:
         nbPlaces:
           type: integer
-        statut:
-          type: string
-        dateCreation:
-          type: string
-          format: date
-        montantAttendu:
-          type: number
         user:
           $ref: '#/components/schemas/UserReference'
         event:
@@ -533,11 +588,36 @@ components:
         - user
         - event
 
+    Paiement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        montant:
+          type: number
+          format: double
+        statut:
+          $ref: '#/components/schemas/PaiementStatut'
+        datePaiement:
+          type: string
+          format: date
+          nullable: true
+        reservationId:
+          type: integer
+          format: int64
+      required:
+        - id
+        - montant
+        - statut
+        - reservationId
+
     UserReference:
       type: object
       properties:
         id:
           type: integer
+          format: int64
       required:
         - id
 
@@ -546,49 +626,6 @@ components:
       properties:
         id:
           type: integer
-      required:
-        - id
-
-    Paiement:
-      type: object
-      properties:
-        id:
-          type: integer
-        montant:
-          type: number
-        statut:
-          type: string
-        datePaiement:
-          type: string
-          format: date
-        reservation:
-          $ref: '#/components/schemas/ReservationReference'
-      required:
-        - id
-        - montant
-        - statut
-        - reservation
-
-    PaiementCreateRequest:
-      type: object
-      properties:
-        montant:
-          type: number
-        statut:
-          type: string
-        datePaiement:
-          type: string
-          format: date
-        reservation:
-          $ref: '#/components/schemas/ReservationReference'
-      required:
-        - montant
-        - reservation
-
-    ReservationReference:
-      type: object
-      properties:
-        id:
-          type: integer
+          format: int64
       required:
         - id
