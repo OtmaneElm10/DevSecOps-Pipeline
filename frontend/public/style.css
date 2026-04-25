@@ -221,6 +221,50 @@ main {
     transition: transform 0.5s var(--ease);
 }
 
+/* =========================================
+   BARRE DE PROGRESSION (Participants)
+   ========================================= */
+.progress-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border-soft);
+}
+
+.participant-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.participant-label span:last-child {
+    color: var(--gold); /* Le compteur en doré */
+}
+
+/* Le fond de la jauge */
+.progress-container {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Le remplissage de la jauge */
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pitch-bright), var(--gold));
+    border-radius: 999px;
+    width: 0%; /* C'est le JS qui va changer ça */
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+
 /* halo or au survol */
 .card::after {
     content: "";
@@ -483,6 +527,11 @@ main {
 .auth-container p a:hover {
     color: var(--gold-soft);
     text-decoration: underline;
+}
+
+.auth-container select option {
+    background-color: var(--bg-1); /* Fond vert très sombre */
+    color: var(--text);            /* Texte blanc */
 }
 
 /* Sections dynamiques (create-event) */

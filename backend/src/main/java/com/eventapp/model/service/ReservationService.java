@@ -98,14 +98,12 @@ public class ReservationService {
         Event event = eventRepository.findById(reservation.getEvent().getId())
                 .orElseThrow(EventNotFoundException::new);
 
-        int reservedPlaces = reservationRepository.findByEventId(event.getId())
-                .stream()
-                .mapToInt(Reservation::getNbPlaces)
-                .sum();
-
-        if (reservedPlaces + reservation.getNbPlaces() > event.getCapaciteMax()) {
+        if (event.getNbInscrits() + reservation.getNbPlaces() > event.getCapaciteMax()) {
             throw new ReservationCapacityExceededException();
         }
+
+        event.setNbInscrits(event.getNbInscrits() + reservation.getNbPlaces());
+        eventRepository.save(event);
 
         reservation.setUser(user);
         reservation.setEvent(event);
@@ -146,7 +144,7 @@ public class ReservationService {
     @Transactional
     public void cancelReservation(final Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(ReservationNotFoundException::new);
+            .orElseThrow(ReservationNotFoundException::new);
 
         if (ReservationStatut.ANNULEE.equals(reservation.getStatut())) {
             throw new InvalidReservationException("Reservation is already cancelled");
@@ -154,10 +152,18 @@ public class ReservationService {
 
         if (ReservationStatut.PAYEE.equals(reservation.getStatut())) {
             throw new InvalidReservationException("Cannot cancel a paid reservation");
-        }
+        }        
+
+        Event event = reservation.getEvent();
+        int newNbInscrits = event.getNbInscrits() - reservation.getNbPlaces();
+
+        event.setNbInscrits(Math.max(newNbInscrits, 0));
+        eventRepository.save(event);
 
         paiementService.cancelPendingPaiement(reservationId);
         reservation.setStatut(ReservationStatut.ANNULEE);
+
+        reservationRepository.save(reservation);
     }
 
     /**
