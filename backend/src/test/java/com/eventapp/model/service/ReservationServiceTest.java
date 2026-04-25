@@ -195,7 +195,7 @@ class ReservationServiceTest {
 
     @Test
     void cancelReservationShouldThrowWhenNotFound() {
-        when(reservationRepository.existsById(99L)).thenReturn(false);
+        when(reservationRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> reservationService.cancelReservation(99L))
                 .isInstanceOf(ReservationNotFoundException.class);
@@ -203,10 +203,20 @@ class ReservationServiceTest {
 
     @Test
     void cancelReservationShouldDeleteWhenFound() {
-        when(reservationRepository.existsById(1L)).thenReturn(true);
+        Event mockEvent = new Event();
+        mockEvent.setId(1L);
+        mockEvent.setNbInscrits(5);
+
+        Reservation mockReservation = new Reservation();
+        mockReservation.setId(1L);
+        mockReservation.setNbPlaces(2);
+        mockReservation.setEvent(mockEvent);
+
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(mockReservation));
 
         reservationService.cancelReservation(1L);
 
-        verify(reservationRepository).deleteById(1L);
+        verify(eventRepository).save(mockEvent);
+        verify(reservationRepository).delete(mockReservation);
     }
 }

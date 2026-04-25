@@ -96,6 +96,9 @@ public class ReservationService {
             throw new ReservationCapacityExceededException();
         }
 
+        event.setNbInscrits(event.getNbInscrits() + reservation.getNbPlaces());
+        eventRepository.save(event);
+
         reservation.setUser(user);
         reservation.setEvent(event);
 
@@ -126,11 +129,14 @@ public class ReservationService {
      * @param reservationId reservation ID to cancel
      */
     public void cancelReservation(final Long reservationId) {
-        if (!reservationRepository.existsById(reservationId)) {
-            throw new ReservationNotFoundException();
-        }
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(ReservationNotFoundException::new);
 
-        reservationRepository.deleteById(reservationId);
+        Event event = reservation.getEvent();
+        event.setNbInscrits(event.getNbInscrits() - reservation.getNbPlaces());
+        eventRepository.save(event);
+
+        reservationRepository.delete(reservation);
     }
 
     /**

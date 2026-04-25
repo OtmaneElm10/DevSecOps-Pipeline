@@ -9,16 +9,32 @@ fetch('/api/events')
             return;
         }
 
-        eventList.innerHTML = events.map(event => `
+        eventList.innerHTML = events.map(event => {
+            const inscrits = event.nbInscrits || 0;
+            const max = event.capaciteMax || 1;
+
+            const pourcentage = Math.min((inscrits / max) * 100, 100);
+
+            return `
             <div class="card" data-id="${event.id}">
                 <div class="card-content">
                     <h2>${event.title}</h2>
                     <p>${event.description}</p>
                     <p><strong>Lieu :</strong> ${event.lieu}</p>
+                    
+                    <div class="progress-section">
+                        <div class="participant-label">
+                            <span>Participants</span>
+                            <span>${inscrits} / ${max}</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${pourcentage}%"></div>
+                        </div>
+                    </div>
                 </div>
-                <button class="btn-register">S'inscrire</button>
+                <button class="btn-register" onclick="event.stopPropagation(); window.location.href='details.html?id=${event.id}'">S'inscrire</button>
             </div>
-        `).join('');
+        `}).join('');
 
         // Clic sur une carte => page détails
         document.querySelectorAll('.card').forEach(card => {

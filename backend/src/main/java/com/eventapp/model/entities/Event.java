@@ -41,6 +41,9 @@ public class Event {
 
     private double prix;
 
+    @Column(columnDefinition = "integer default 0")
+    private int nbInscrits = 0;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EventType type;
@@ -135,5 +138,14 @@ public class Event {
     public void setCreatedBy(final User createdBy) {
         this.createdBy = createdBy;
     }
+
+    public int getNbInscrits() {
+        return nbInscrits;
+    }
+
+    public void setNbInscrits(final int nbInscrits) {
+        this.nbInscrits = nbInscrits;
+    }
 }
+
 
