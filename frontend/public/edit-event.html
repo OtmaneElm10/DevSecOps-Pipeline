@@ -2,14 +2,14 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Créer un Événement - Club de Foot</title>
+    <title>Modifier un Événement - Club de Foot</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="auth-page">
 <div class="auth-container" style="max-width: 480px;">
-    <h2>Ajouter un événement</h2>
+    <h2>Modifier l'événement</h2>
 
-    <form id="create-event-form">
+    <form id="edit-event-form">
         <input type="text" id="title" placeholder="Titre de l'événement" required>
         <input type="text" id="description" placeholder="Description courte" required>
         <input type="text" id="lieu" placeholder="Lieu (ex: Stade Municipal)" required>
@@ -21,7 +21,7 @@
             </div>
             <div style="flex: 1;">
                 <label>Fin</label>
-                <input type="date" id="dateFin" required>
+                <input type="date" id="dateFin">
             </div>
         </div>
 
@@ -51,13 +51,13 @@
             <input type="number" id="nbEquipes" placeholder="Nombre d'équipes participantes">
         </div>
 
-        <button type="submit" class="btn-login" style="margin-top: 20px;">Créer l'événement</button>
+        <button type="submit" class="btn-login" style="margin-top: 20px;">Enregistrer les modifications</button>
     </form>
 
     <p><a href="index.html">← Retour à l'accueil</a></p>
 </div>
 
-<script src="create-event.js"></script>
+<script src="edit-event.js"></script>
 
 </body>
 </html>
