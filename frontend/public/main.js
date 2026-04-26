@@ -20,7 +20,16 @@ function loadEvents(type = '') {
                 const inscrits = event.nbInscrits || 0;
                 const max = event.capaciteMax || 1;
                 const pourcentage = Math.min((inscrits / max) * 100, 100);
-
+                const userRole = localStorage.getItem('role');
+                let adminButtons = '';
+                if (userRole === 'ADMIN') {
+                    adminButtons = `
+                        <div class="admin-actions">
+                            <button class="btn-admin btn-edit" onclick="event.stopPropagation(); window.location.href='edit-event.html?id=${event.id}'">Modifier</button>
+                            <button class="btn-admin btn-delete" onclick="event.stopPropagation(); deleteEvent(${event.id})">Supprimer</button>
+                        </div>
+                    `;
+                }
                 return `
                 <div class="card" data-id="${event.id}">
                     <div class="card-content">
@@ -39,6 +48,7 @@ function loadEvents(type = '') {
                         </div>
                     </div>
                     <button class="btn-register" onclick="event.stopPropagation(); window.location.href='details.html?id=${event.id}'">S'inscrire</button>
+                    ${adminButtons}
                 </div>
             `}).join('');
 
@@ -62,6 +72,30 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
         loadEvents(type);
     });
 });
+
+function deleteEvent(eventId) {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.")) {
+        return;
+    }
+
+    fetch(`/api/events/${eventId}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (response.ok) {
+                alert("Événement supprimé avec succès !");
+                const activeFilter = document.querySelector('.filter-btn.active').dataset.type;
+                loadEvents(activeFilter);
+            } else {
+                alert("Erreur lors de la suppression de l'événement.");
+                console.error("Erreur serveur:", response.status);
+            }
+        })
+        .catch(error => {
+            console.error("Erreur réseau:", error);
+            alert("Impossible de joindre le serveur.");
+        });
+}
 
 // Affichage du bouton "Create Event" si admin
 document.addEventListener('DOMContentLoaded', () => {

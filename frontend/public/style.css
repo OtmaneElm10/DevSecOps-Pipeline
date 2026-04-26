@@ -259,9 +259,7 @@ main {
     transition: transform 0.5s var(--ease);
 }
 
-/* =========================================
-   BARRE DE PROGRESSION (Participants)
-   ========================================= */
+/* ------- BARRE DE PROGRESSION (Participants) ------- */
 .progress-section {
     margin-top: 15px;
     padding-top: 15px;
@@ -389,6 +387,53 @@ main {
 }
 
 .btn-register:hover::after { transform: translateX(4px); }
+
+/* ---------- actions admins sur les cartes  ---------- */
+.admin-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Petite ligne de séparation subtile */
+}
+
+.btn-admin {
+    flex: 1; /* Les boutons prennent la même largeur */
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: transparent;
+}
+
+/* Bouton Modifier - Style neutre/gris clair */
+.btn-edit {
+    color: #a0a0a0;
+    border: 1px solid #555;
+}
+
+.btn-edit:hover {
+    border-color: #fff;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Bouton Supprimer - Style rouge subtil */
+.btn-delete {
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+.btn-delete:hover {
+    background: #ff6b6b;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
 
 /* ---------- FAB Create Event ---------- */
 .fab-button {
