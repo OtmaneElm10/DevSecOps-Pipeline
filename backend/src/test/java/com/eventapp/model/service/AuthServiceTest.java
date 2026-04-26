@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.eventapp.model.entities.User;
 import com.eventapp.repositories.UserRepository;
@@ -24,6 +25,9 @@ class AuthServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private AuthService authService;
 
@@ -32,8 +36,13 @@ class AuthServiceTest {
         String username = "testuser";
         String email = "test@example.com";
         String password = "password";
+        String encodedPassword = "encodedPassword";
+
 
         given(userRepository.findByUsername(username)).willReturn(Optional.empty());
+        given(userRepository.findByEmail(email)).willReturn(Optional.empty());
+        given(passwordEncoder.encode(password)).willReturn(encodedPassword);
+        
         given(userRepository.save(any(User.class))).willAnswer(invocation -> {
             User user = invocation.getArgument(0);
             user.setId(1L);
@@ -44,7 +53,7 @@ class AuthServiceTest {
 
         assertEquals(username, result.getUsername());
         assertEquals(email, result.getEmail());
-        assertEquals(password, result.getPassword());
+        assertEquals(encodedPassword, result.getPassword());
         assertEquals("USER", result.getRole());
         verify(userRepository).save(any(User.class));
     }
@@ -66,9 +75,12 @@ class AuthServiceTest {
     void loginShouldReturnUserWhenCredentialsValid() {
         String username = "testuser";
         String password = "password";
-        User user = new User(username, "email", password, "USER");
+        String encodedPassword = "encodedPassword";
+
+        User user = new User(username, "email", encodedPassword, "USER");
 
         given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
+        given(passwordEncoder.matches(password, encodedPassword)).willReturn(true);
 
         User result = authService.login(username, password);
 
@@ -90,9 +102,13 @@ class AuthServiceTest {
     @Test
     void loginShouldThrowExceptionWhenPasswordInvalid() {
         String username = "testuser";
-        User user = new User(username, "email", "correctpassword", "USER");
+        String wrongPassword = "wrongpassword";
+        String correctPassword = "encodedPassword";
+
+        User user = new User(username, "email", correctPassword, "USER");
 
         given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
+        given(passwordEncoder.matches(wrongPassword, correctPassword)).willReturn(false);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
             authService.login(username, "wrongpassword"));

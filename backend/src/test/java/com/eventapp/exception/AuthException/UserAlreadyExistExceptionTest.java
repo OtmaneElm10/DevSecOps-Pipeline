@@ -23,7 +23,8 @@ class UserAlreadyExistsExceptionTest {
 
     @Test
     void shouldBeThrownAndCaught() {
-        assertThatThrownBy(() -> { throw new UserAlreadyExistsException("Username déjà utilisé"); })
+        assertThatThrownBy(() -> { 
+            throw new UserAlreadyExistsException("Username déjà utilisé"); })
             .isInstanceOf(UserAlreadyExistsException.class)
             .hasMessage("Username déjà utilisé");
     }
