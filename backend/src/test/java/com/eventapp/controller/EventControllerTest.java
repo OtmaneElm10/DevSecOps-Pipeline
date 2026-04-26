@@ -51,7 +51,7 @@ class EventControllerTest {
         Event e1 = new Event();
         e1.setTitle("Gala du club");
         e1.setDescription("Grande soirée annuelle");
-        e1.setLieu("Palais des Congrès");
+        e1.setLieu("Salle des Fêtes");
         e1.setDateDebut(LocalDate.now());
         e1.setDateFin(LocalDate.now().plusDays(1));
         e1.setCapaciteMax(500);
@@ -60,7 +60,7 @@ class EventControllerTest {
 
         Event e2 = new Event();
         e2.setTitle("Stage M18");
-        e2.setDescription("Stage de perfectionnement pour les jeunes");
+        e2.setDescription("Stage de perfectionnement pour les joeurs");
         e2.setLieu("Stade Municipal");
         e2.setDateDebut(LocalDate.now());
         e2.setDateFin(LocalDate.now().plusDays(1));
@@ -104,7 +104,7 @@ class EventControllerTest {
         Event e = new Event();
         e.setTitle("Gala du club");
         e.setDescription("Grande soirée annuelle");
-        e.setLieu("Palais des Congrès");
+        e.setLieu("Salle des Fêtes");
         e.setDateDebut(LocalDate.now());
         e.setDateFin(LocalDate.now().plusDays(1));
         e.setCapaciteMax(500);
@@ -116,7 +116,7 @@ class EventControllerTest {
         mockMvc.perform(get("/api/events"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].title").value("Gala du club"))
-                .andExpect(jsonPath("$[0].lieu").value("Palais des Congrès"))
+                .andExpect(jsonPath("$[0].lieu").value("Salle des Fêtes"))
                 .andExpect(jsonPath("$[0].capaciteMax").value(500));
     }
 }
