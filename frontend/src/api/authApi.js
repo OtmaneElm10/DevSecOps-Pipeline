@@ -10,7 +10,6 @@ export const register = async (username, email, password) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            // Ici on fait le lien avec le registerDTO
             body: JSON.stringify({ username, email, password })
         });
 
@@ -18,7 +17,15 @@ export const register = async (username, email, password) => {
             throw new Error("Erreur lors de l'inscription");
         }
 
-        return await response.json(); 
+        const data = await response.json();
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.id);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("role", data.role);
+
+        return data;
     } catch (error) {
         console.error("Erreur Register:", error);
         throw error;
@@ -35,7 +42,6 @@ export const login = async (username, password) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            // Ici on fait le lien avec le loginDTO
             body: JSON.stringify({ username, password })
         });
 
@@ -43,7 +49,15 @@ export const login = async (username, password) => {
             throw new Error("Identifiants incorrects ou utilisateur introuvable");
         }
 
-        return await response.json(); 
+        const data = await response.json();
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.id);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("role", data.role);
+
+        return data;
     } catch (error) {
         console.error("Erreur Login:", error);
         throw error;
