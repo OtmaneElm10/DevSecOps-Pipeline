@@ -1,50 +1,101 @@
 
 const eventList = document.getElementById('event-list');
 
-fetch('/api/events')
-    .then(res => res.json())
-    .then(events => {
-        if (events.length === 0) {
-            eventList.innerHTML = "<p>Aucun événement pour le moment.</p>";
-            return;
-        }
+function loadEvents(type = '') {
+    // Construction de l'URL avec le filtre si nécessaire
+    let url = '/api/events';
+    if (type !== '') {
+        url += `?type=${type}`;
+    }
 
-        eventList.innerHTML = events.map(event => {
-            const inscrits = event.nbInscrits || 0;
-            const max = event.capaciteMax || 1;
+    fetch(url)
+        .then(res => res.json())
+        .then(events => {
+            if (events.length === 0) {
+                eventList.innerHTML = "<p>Aucun événement pour ce filtre.</p>";
+                return;
+            }
 
-            const pourcentage = Math.min((inscrits / max) * 100, 100);
-
-            return `
-            <div class="card" data-id="${event.id}">
-                <div class="card-content">
-                    <h2>${event.title}</h2>
-                    <p>${event.description}</p>
-                    <p><strong>Lieu :</strong> ${event.lieu}</p>
-                    
-                    <div class="progress-section">
-                        <div class="participant-label">
-                            <span>Participants</span>
-                            <span>${inscrits} / ${max}</span>
+            eventList.innerHTML = events.map(event => {
+                const inscrits = event.nbInscrits || 0;
+                const max = event.capaciteMax || 1;
+                const pourcentage = Math.min((inscrits / max) * 100, 100);
+                const userRole = localStorage.getItem('role');
+                let adminButtons = '';
+                if (userRole === 'ADMIN') {
+                    adminButtons = `
+                        <div class="admin-actions">
+                            <button class="btn-admin btn-edit" onclick="event.stopPropagation(); window.location.href='edit-event.html?id=${event.id}'">Modifier</button>
+                            <button class="btn-admin btn-delete" onclick="event.stopPropagation(); deleteEvent(${event.id})">Supprimer</button>
                         </div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${pourcentage}%"></div>
+                    `;
+                }
+                return `
+                <div class="card" data-id="${event.id}">
+                    <div class="card-content">
+                        <h2>${event.title}</h2>
+                        <p>${event.description}</p>
+                        <p><strong>Lieu :</strong> ${event.lieu}</p>
+                        
+                        <div class="progress-section">
+                            <div class="participant-label">
+                                <span>Participants</span>
+                                <span>${inscrits} / ${max}</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${pourcentage}%"></div>
+                            </div>
                         </div>
                     </div>
+                    <button class="btn-register" onclick="event.stopPropagation(); window.location.href='details.html?id=${event.id}'">S'inscrire</button>
+                    ${adminButtons}
                 </div>
-                <button class="btn-register" onclick="event.stopPropagation(); window.location.href='details.html?id=${event.id}'">S'inscrire</button>
-            </div>
-        `}).join('');
+            `}).join('');
 
-        // Clic sur une carte => page détails
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => {
-                const id = card.dataset.id;
-                window.location.href = `details.html?id=${id}`;
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = card.dataset.id;
+                    window.location.href = `details.html?id=${id}`;
+                });
             });
-        });
+        })
+        .catch(err => console.error("Erreur back:", err));
+}
+
+loadEvents();
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        const type = e.target.dataset.type;
+        loadEvents(type);
+    });
+});
+
+function deleteEvent(eventId) {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.")) {
+        return;
+    }
+
+    fetch(`/api/events/${eventId}`, {
+        method: 'DELETE',
     })
-    .catch(err => console.error("Erreur back:", err));
+        .then(response => {
+            if (response.ok) {
+                alert("Événement supprimé avec succès !");
+                const activeFilter = document.querySelector('.filter-btn.active').dataset.type;
+                loadEvents(activeFilter);
+            } else {
+                alert("Erreur lors de la suppression de l'événement.");
+                console.error("Erreur serveur:", response.status);
+            }
+        })
+        .catch(error => {
+            console.error("Erreur réseau:", error);
+            alert("Impossible de joindre le serveur.");
+        });
+}
 
 // Affichage du bouton "Create Event" si admin
 document.addEventListener('DOMContentLoaded', () => {
