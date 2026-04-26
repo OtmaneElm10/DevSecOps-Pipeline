@@ -1,5 +1,7 @@
 package com.eventapp.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -127,7 +129,7 @@ class EventControllerTest {
         Event eventToCreate = createTestEvent(null, "New Event", EventType.SOIREE);
         Event createdEvent = createTestEvent(1L, "New Event", EventType.SOIREE);
 
-        given(eventService.createEvent(eventToCreate)).willReturn(createdEvent);
+        given(eventService.createEvent(any(Event.class))).willReturn(createdEvent);
 
         mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -142,7 +144,7 @@ class EventControllerTest {
         Event updateData = createTestEvent(null, "Updated Event", EventType.TOURNOI);
         Event updatedEvent = createTestEvent(1L, "Updated Event", EventType.TOURNOI);
 
-        given(eventService.updateEvent(1L, updateData)).willReturn(updatedEvent);
+        given(eventService.updateEvent(eq(1L), any(Event.class))).willReturn(updatedEvent);
 
         mockMvc.perform(put("/api/events/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -157,7 +159,7 @@ class EventControllerTest {
     void updateEventShouldReturn404WhenNotFound() throws Exception {
         Event updateData = createTestEvent(null, "Updated Event", EventType.TOURNOI);
 
-        given(eventService.updateEvent(1L, updateData)).willThrow(new EventNotFoundException());
+        doThrow(new EventNotFoundException()).when(eventService).updateEvent(eq(1L), any(Event.class));
 
         mockMvc.perform(put("/api/events/1")
                 .contentType(MediaType.APPLICATION_JSON)
