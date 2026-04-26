@@ -57,12 +57,20 @@ public class JwtService {
      * @return true if the token is valid and belongs to the user, false otherwise
      */
     public boolean isTokenValid(final String token, final User user) {
-        return extractUsername(token).equals(user.getUsername())
-                && !isTokenExpired(token);
+        try {
+            return extractUsername(token).equals(user.getUsername())
+                    && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isTokenExpired(final String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
+        try {
+            return extractAllClaims(token).getExpiration().before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     /**

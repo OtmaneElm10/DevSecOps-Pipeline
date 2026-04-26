@@ -16,6 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.eventapp.exception.AuthException.InvalidPasswordException;
+import com.eventapp.exception.AuthException.UserAlreadyExistsException;
+import com.eventapp.exception.AuthException.UserNotFoundException;
 import com.eventapp.model.entities.User;
 import com.eventapp.repositories.UserRepository;
 
@@ -64,10 +67,25 @@ class AuthServiceTest {
 
         given(userRepository.findByUsername(username)).willReturn(Optional.of(new User()));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+        UserAlreadyExistsException exception = assertThrows(UserAlreadyExistsException.class, () ->
             authService.register(username, "email", "password"));
 
         assertEquals("Username déjà utilisé", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void registerShouldThrowExceptionWhenEmailExists() {
+        String username = "testuser";
+        String email = "duplicate@example.com";
+
+        given(userRepository.findByUsername(username)).willReturn(Optional.empty());
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(new User()));
+
+        UserAlreadyExistsException exception = assertThrows(UserAlreadyExistsException.class, () ->
+            authService.register(username, email, "password"));
+
+        assertEquals("Email déjà utilisé", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -93,7 +111,7 @@ class AuthServiceTest {
 
         given(userRepository.findByUsername(username)).willReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () ->
             authService.login(username, "password"));
 
         assertEquals("User not found", exception.getMessage());
@@ -110,7 +128,7 @@ class AuthServiceTest {
         given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
         given(passwordEncoder.matches(wrongPassword, correctPassword)).willReturn(false);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+        InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () ->
             authService.login(username, "wrongpassword"));
 
         assertEquals("Invalid password", exception.getMessage());
