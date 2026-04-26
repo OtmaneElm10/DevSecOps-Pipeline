@@ -36,7 +36,7 @@ class MatchTest {
 
         assertThat(match.getId()).isNull();
         assertThat(match.getDateMatch()).isNull();
-        assertThat(match.getScoreA()).isNull(); // important : Integer
+        assertThat(match.getScoreA()).isNull();
         assertThat(match.getScoreB()).isNull();
         assertThat(match.getStatut()).isNull();
         assertThat(match.getEquipeA()).isNull();
