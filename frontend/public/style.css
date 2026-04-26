@@ -183,6 +183,44 @@ main {
     width: 100%;
 }
 
+/* ---------- Filtres ---------- */
+.filters-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 35px;
+    flex-wrap: wrap;
+    animation: fadeDown 0.7s var(--ease) both;
+}
+
+.filter-btn {
+    background: transparent;
+    color: var(--text-muted);
+    border: 2px solid var(--border-soft);
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: all 0.3s var(--ease);
+}
+
+.filter-btn:hover {
+    border-color: var(--gold-soft);
+    color: var(--text);
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--gold);
+    color: var(--text-dark);
+    border-color: var(--gold);
+    box-shadow: 0 4px 14px var(--gold-glow);
+}
+
 /* ---------- Cartes événement ---------- */
 .card {
     position: relative;

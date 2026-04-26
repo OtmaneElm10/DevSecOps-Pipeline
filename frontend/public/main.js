@@ -1,50 +1,67 @@
 
 const eventList = document.getElementById('event-list');
 
-fetch('/api/events')
-    .then(res => res.json())
-    .then(events => {
-        if (events.length === 0) {
-            eventList.innerHTML = "<p>Aucun événement pour le moment.</p>";
-            return;
-        }
+function loadEvents(type = '') {
+    // Construction de l'URL avec le filtre si nécessaire
+    let url = '/api/events';
+    if (type !== '') {
+        url += `?type=${type}`;
+    }
 
-        eventList.innerHTML = events.map(event => {
-            const inscrits = event.nbInscrits || 0;
-            const max = event.capaciteMax || 1;
+    fetch(url)
+        .then(res => res.json())
+        .then(events => {
+            if (events.length === 0) {
+                eventList.innerHTML = "<p>Aucun événement pour ce filtre.</p>";
+                return;
+            }
 
-            const pourcentage = Math.min((inscrits / max) * 100, 100);
+            eventList.innerHTML = events.map(event => {
+                const inscrits = event.nbInscrits || 0;
+                const max = event.capaciteMax || 1;
+                const pourcentage = Math.min((inscrits / max) * 100, 100);
 
-            return `
-            <div class="card" data-id="${event.id}">
-                <div class="card-content">
-                    <h2>${event.title}</h2>
-                    <p>${event.description}</p>
-                    <p><strong>Lieu :</strong> ${event.lieu}</p>
-                    
-                    <div class="progress-section">
-                        <div class="participant-label">
-                            <span>Participants</span>
-                            <span>${inscrits} / ${max}</span>
-                        </div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${pourcentage}%"></div>
+                return `
+                <div class="card" data-id="${event.id}">
+                    <div class="card-content">
+                        <h2>${event.title}</h2>
+                        <p>${event.description}</p>
+                        <p><strong>Lieu :</strong> ${event.lieu}</p>
+                        
+                        <div class="progress-section">
+                            <div class="participant-label">
+                                <span>Participants</span>
+                                <span>${inscrits} / ${max}</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${pourcentage}%"></div>
+                            </div>
                         </div>
                     </div>
+                    <button class="btn-register" onclick="event.stopPropagation(); window.location.href='details.html?id=${event.id}'">S'inscrire</button>
                 </div>
-                <button class="btn-register" onclick="event.stopPropagation(); window.location.href='details.html?id=${event.id}'">S'inscrire</button>
-            </div>
-        `}).join('');
+            `}).join('');
 
-        // Clic sur une carte => page détails
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => {
-                const id = card.dataset.id;
-                window.location.href = `details.html?id=${id}`;
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = card.dataset.id;
+                    window.location.href = `details.html?id=${id}`;
+                });
             });
-        });
-    })
-    .catch(err => console.error("Erreur back:", err));
+        })
+        .catch(err => console.error("Erreur back:", err));
+}
+
+loadEvents();
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        const type = e.target.dataset.type;
+        loadEvents(type);
+    });
+});
 
 // Affichage du bouton "Create Event" si admin
 document.addEventListener('DOMContentLoaded', () => {
