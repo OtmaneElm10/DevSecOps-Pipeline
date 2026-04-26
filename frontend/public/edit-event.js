@@ -1,4 +1,7 @@
-if (localStorage.getItem('role') !== 'ADMIN') {
+const token = localStorage.getItem('token');
+const role = localStorage.getItem('role');
+
+if (!token || role !== 'ADMIN') {
     alert("Accès refusé. Vous devez être administrateur.");
     window.location.href = 'index.html';
 }
@@ -16,6 +19,7 @@ const eventTypeSelect = document.getElementById('eventType');
 eventTypeSelect.addEventListener('change', function () {
     const selectedType = this.value;
     const allDynamicSections = document.querySelectorAll('.dynamic-section');
+
     allDynamicSections.forEach(section => {
         section.style.display = 'none';
     });
@@ -30,6 +34,7 @@ eventTypeSelect.addEventListener('change', function () {
 async function loadEventData() {
     try {
         const response = await fetch(`/api/events/${eventId}`);
+
         if (response.ok) {
             const event = await response.json();
 
@@ -77,7 +82,8 @@ document.getElementById('edit-event-form').addEventListener('submit', async func
         const response = await fetch(`/api/events/${eventId}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(updatedEvent)
         });
@@ -85,12 +91,22 @@ document.getElementById('edit-event-form').addEventListener('submit', async func
         if (response.ok) {
             alert("Événement modifié avec succès !");
             window.location.href = "index.html";
+        } else if (response.status === 401) {
+            alert("Vous devez être connecté.");
+            window.location.href = "login.html";
+        } else if (response.status === 403) {
+            alert("Accès refusé. Vous devez être administrateur.");
+            window.location.href = "index.html";
         } else {
             let errorMessage = "Erreur du serveur. L'événement n'a pas pu être modifié.";
+
             try {
                 const errorData = await response.json();
-                if (errorData.message) errorMessage = errorData.message;
+                if (errorData.message) {
+                    errorMessage = errorData.message;
+                }
             } catch (jsonError) {}
+
             alert(errorMessage);
         }
     } catch (error) {
