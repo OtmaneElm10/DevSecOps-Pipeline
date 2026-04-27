@@ -1,3 +1,4 @@
+const token = localStorage.getItem('token');
 const eventTypeSelect = document.getElementById('eventType');
 
 eventTypeSelect.addEventListener('change', function () {
@@ -37,7 +38,8 @@ document.getElementById('create-event-form').addEventListener('submit', async fu
         const response = await fetch('/api/events', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(newEvent)
         });
