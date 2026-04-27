@@ -112,7 +112,7 @@ function deleteEvent(eventId) {
                 alert("Événement supprimé avec succès !");
                 loadEvents();
             } else {
-                alert("Action refusée : Vous n'avez pas les droits ou votre session a expiré.");
+                alert("Action refusée : vous n'avez pas les droits ou votre session a expiré.");
             }
         })
         .catch(error => {
@@ -132,18 +132,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('btn-logout');
     const reservationsLink = document.getElementById('link-reservations');
     const paymentsLink = document.getElementById('link-payments');
+    const profileLink = document.getElementById('link-profile');
 
     if (token) {
         if (loginLink) loginLink.style.display = 'none';
         if (signupLink) signupLink.style.display = 'none';
         if (paymentsLink) paymentsLink.style.display = 'inline-block';
         if (reservationsLink) reservationsLink.style.display = 'inline-block';
+        if (profileLink) profileLink.style.display = 'inline-block';
         if (logoutBtn) logoutBtn.style.display = 'inline-block';
     } else {
         if (loginLink) loginLink.style.display = 'inline-block';
         if (signupLink) signupLink.style.display = 'inline-block';
         if (paymentsLink) paymentsLink.style.display = 'none';
         if (reservationsLink) reservationsLink.style.display = 'none';
+        if (profileLink) profileLink.style.display = 'none';
         if (logoutBtn) logoutBtn.style.display = 'none';
     }
 });
