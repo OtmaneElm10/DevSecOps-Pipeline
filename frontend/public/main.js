@@ -130,17 +130,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginLink = document.getElementById('link-login');
     const signupLink = document.getElementById('link-signup');
     const logoutBtn = document.getElementById('btn-logout');
+    const reservationsLink = document.getElementById('link-reservations');
     const paymentsLink = document.getElementById('link-payments');
 
     if (token) {
         if (loginLink) loginLink.style.display = 'none';
         if (signupLink) signupLink.style.display = 'none';
         if (paymentsLink) paymentsLink.style.display = 'inline-block';
+        if (reservationsLink) reservationsLink.style.display = 'inline-block';
         if (logoutBtn) logoutBtn.style.display = 'inline-block';
     } else {
         if (loginLink) loginLink.style.display = 'inline-block';
         if (signupLink) signupLink.style.display = 'inline-block';
         if (paymentsLink) paymentsLink.style.display = 'none';
+        if (reservationsLink) reservationsLink.style.display = 'none';
         if (logoutBtn) logoutBtn.style.display = 'none';
     }
 });
