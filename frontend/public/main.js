@@ -94,42 +94,29 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 });
 
 function deleteEvent(eventId) {
-    if (userRole !== 'ADMIN' || !token) {
-        alert("Accès refusé. Vous devez être administrateur.");
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
         return;
     }
 
-    if (!confirm("Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.")) {
-        return;
-    }
+    const token = localStorage.getItem('token');
 
     fetch(`/api/events/${eventId}`, {
         method: 'DELETE',
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
     })
         .then(response => {
             if (response.ok) {
                 alert("Événement supprimé avec succès !");
-
-                const activeFilter = document.querySelector('.filter-btn.active');
-                const type = activeFilter ? activeFilter.dataset.type : '';
-
-                loadEvents(type);
-            } else if (response.status === 401) {
-                alert("Vous devez être connecté.");
-                window.location.href = "login.html";
-            } else if (response.status === 403) {
-                alert("Accès refusé. Vous devez être administrateur.");
+                loadEvents();
             } else {
-                alert("Erreur lors de la suppression de l'événement.");
-                console.error("Erreur serveur:", response.status);
+                alert("Action refusée : Vous n'avez pas les droits ou votre session a expiré.");
             }
         })
         .catch(error => {
-            console.error("Erreur réseau:", error);
-            alert("Impossible de joindre le serveur.");
+            console.error("Erreur:", error);
         });
 }
 
@@ -139,4 +126,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (createBtn && userRole === 'ADMIN') {
         createBtn.style.display = 'block';
     }
+
+    const loginLink = document.getElementById('link-login');
+    const signupLink = document.getElementById('link-signup');
+    const logoutBtn = document.getElementById('btn-logout');
+
+    if (token) {
+        if (loginLink) loginLink.style.display = 'none';
+        if (signupLink) signupLink.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+    } else {
+        if (loginLink) loginLink.style.display = 'inline-block';
+        if (signupLink) signupLink.style.display = 'inline-block';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+    }
 });
+
+window.logout = function() {
+    if (!confirm("Voulez-vous vraiment vous déconnecter ?")) return;
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+
+    window.location.reload();
+};
