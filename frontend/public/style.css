@@ -713,18 +713,44 @@ main {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
     overflow: hidden;
+    color: var(--text);
+    font-size: 0.95rem;
 }
-.payments-table th, .payments-table td {
-    padding: 12px;
+
+.payments-table th,
+.payments-table td {
+    padding: 14px 16px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-soft);
 }
-.payments-table th { background-color: #f4f4f4; }
-.status-valide { color: green; font-weight: bold; }
-.status-en_attente { color: orange; font-weight: bold; }
+
+.payments-table th {
+    background-color: rgba(34, 197, 94, 0.08);
+    color: var(--gold);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+}
+
+.payments-table tr:last-child td {
+    border-bottom: none;
+}
+
+.payments-table tr:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.payments-table td button {
+    margin: 2px 4px 2px 0;
+}
+
+.status-valide { color: var(--pitch-bright); font-weight: bold; }
+.status-en_attente { color: var(--gold); font-weight: bold; }
 
 /* ---------- Animations ---------- */
 @keyframes fadeUp {
