@@ -708,6 +708,24 @@ main {
     transform: translateY(-2px);
 }
 
+/* ---------- mes-paiements ---------- */
+.payments-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.payments-table th, .payments-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.payments-table th { background-color: #f4f4f4; }
+.status-valide { color: green; font-weight: bold; }
+.status-en_attente { color: orange; font-weight: bold; }
+
 /* ---------- Animations ---------- */
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
