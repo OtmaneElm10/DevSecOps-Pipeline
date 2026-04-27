@@ -1,4 +1,3 @@
-
 const params = new URLSearchParams(window.location.search);
 const eventId = params.get('id');
 
@@ -7,7 +6,6 @@ const container = document.getElementById('details-container');
 if (!eventId) {
     container.innerHTML = "<p>Aucun événement sélectionné. Retourne à l'accueil et clique sur une carte.</p>";
 } else {
-    // URL RELATIVE (fonctionne peu importe le host : localhost, 192.168.x.x, etc.)
     fetch(`/api/events/${eventId}`)
         .then(res => {
             if (!res.ok) throw new Error("Événement introuvable (status " + res.status + ")");
@@ -28,12 +26,11 @@ if (!eventId) {
                     </div>
 
                     <button class="btn-confirm-inscription" id="btn-confirmer">
-                        Confirmer mon inscription
+                        Réserver
                     </button>
                 </div>
             `;
 
-            // On attache le gestionnaire après injection HTML
             document.getElementById('btn-confirmer').addEventListener('click', () => {
                 confirmerInscription(event);
             });
@@ -45,12 +42,5 @@ if (!eventId) {
 }
 
 function confirmerInscription(event) {
-    console.log("Prix de l'événement :", event.prix);
-    if (event.prix > 0) {
-        const titleEncoded = encodeURIComponent(event.title);
-        window.location.href = `payment.html?id=${event.id}&amount=${event.prix}&title=${titleEncoded}`;
-    } else {
-        alert("Inscription gratuite confirmée !");
-        // TODO : appel fetch POST vers /api/events/{id}/inscription si besoin
-    }
+    window.location.href = `reservation.html?eventId=${event.id}`;
 }
