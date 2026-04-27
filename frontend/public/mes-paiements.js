@@ -12,8 +12,7 @@ async function loadPayments() {
         const response = await fetch(`/api/paiements/user/${userId}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -21,6 +20,8 @@ async function loadPayments() {
             const payments = await response.json();
             displayPayments(payments);
         } else {
+            const err = await response.text();
+            console.error("Erreur serveur :", err);
             paymentsContainer.innerHTML = "<p>Erreur lors du chargement des paiements.</p>";
         }
     } catch (error) {
@@ -30,7 +31,7 @@ async function loadPayments() {
 }
 
 function displayPayments(payments) {
-    if (payments.length === 0) {
+    if (!payments || payments.length === 0) {
         paymentsContainer.innerHTML = "<p>Vous n'avez effectué aucun paiement pour le moment.</p>";
         return;
     }
@@ -40,18 +41,22 @@ function displayPayments(payments) {
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Événement</th>
                     <th>Montant</th>
                     <th>Statut</th>
+                    <th>Réservation</th>
                 </tr>
             </thead>
             <tbody>
                 ${payments.map(p => `
                     <tr>
-                        <td>${new Date(p.paymentDate).toLocaleDateString()}</td>
-                        <td>${p.eventTitle || 'Événement'}</td>
-                        <td>${p.amount} €</td>
-                        <td><span class="status-${p.status.toLowerCase()}">${p.status}</span></td>
+                        <td>${p.datePaiement ? new Date(p.datePaiement).toLocaleDateString() : '-'}</td>
+                        <td>${p.montant} €</td>
+                        <td>
+                            <span class="status-${p.statut.toLowerCase()}">
+                                ${p.statut}
+                            </span>
+                        </td>
+                        <td>#${p.reservationId}</td>
                     </tr>
                 `).join('')}
             </tbody>
