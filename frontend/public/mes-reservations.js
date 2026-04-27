@@ -30,7 +30,7 @@ async function loadReservations() {
 }
 
 function displayReservations(reservations) {
-    if (reservations.length === 0) {
+    if (!reservations || reservations.length === 0) {
         container.innerHTML = "<p>Vous n'avez aucune réservation.</p>";
         return;
     }
@@ -41,51 +41,69 @@ function displayReservations(reservations) {
                 <tr>
                     <th>Événement</th>
                     <th>Places</th>
-                    <th>Prix Total</th>
+                    <th>Prix total</th>
                     <th>Statut</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 ${reservations.map(res => {
-        let actionButtons = '';
-        let statusLabel = (res.statut || 'EN_ATTENTE_DE_PAIEMENT').toUpperCase();
+                    const statusLabel = (res.statut || 'EN_ATTENTE_DE_PAIEMENT').toUpperCase();
+                    const montant = res.montantAttendu || res.prixTotal || 0;
 
-        if (statusLabel === 'EN_ATTENTE_DE_PAIEMENT' || statusLabel === 'EN ATTENTE DE PAIEMENT') {
-            actionButtons = `
-                            <button class="btn-login" onclick="payReservation(${res.id})" style="padding: 5px; font-size: 12px; margin-right: 5px;">Payer</button>
-                            <button class="btn-edit" onclick="modifyReservation(${res.id}, ${res.nbPlaces})" style="padding: 5px; font-size: 12px; margin-right: 5px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer;">Modifier</button>
-                            <button class="btn-delete" onclick="cancelReservation(${res.id})" style="padding: 5px; font-size: 12px;">Annuler</button>
+                    let actionButtons = '';
+
+                    if (statusLabel === 'EN_ATTENTE_DE_PAIEMENT' || statusLabel === 'EN ATTENTE DE PAIEMENT') {
+                        actionButtons = `
+                            <button class="btn-login"
+                                onclick="payReservation(${res.id}, ${montant})"
+                                style="padding: 5px; font-size: 12px; margin-right: 5px;">
+                                Payer
+                            </button>
+
+                            <button class="btn-edit"
+                                onclick="modifyReservation(${res.id}, ${res.nbPlaces})"
+                                style="padding: 5px; font-size: 12px; margin-right: 5px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                Modifier
+                            </button>
+
+                            <button class="btn-delete"
+                                onclick="cancelReservation(${res.id})"
+                                style="padding: 5px; font-size: 12px;">
+                                Annuler
+                            </button>
                         `;
-        } else if (statusLabel === 'ANNULEE' || statusLabel === 'ANNULÉE') {
-            actionButtons = `<em>Réservation annulée</em>`;
-        } else if (statusLabel === 'PAYEE' || statusLabel === 'PAYÉE') {
-            actionButtons = `<em>Payé</em>`;
-        }
+                    } else if (statusLabel === 'ANNULEE' || statusLabel === 'ANNULÉE') {
+                        actionButtons = `<em>Réservation annulée</em>`;
+                    } else if (statusLabel === 'PAYEE' || statusLabel === 'PAYÉE') {
+                        actionButtons = `<em>Payé</em>`;
+                    }
 
-        return `
-                    <tr>
-                        <td>${res.eventTitle || 'Événement #' + (res.eventId || '')}</td>
-                        <td>${res.nbPlaces || 1}</td>
-                        <td>${res.montantAttendu || res.prixTotal || '0'} €</td>
-                        <td><strong>${statusLabel}</strong></td>
-                        <td>${actionButtons}</td>
-                    </tr>
+                    return `
+                        <tr>
+                            <td>${res.eventTitle || 'Événement #' + (res.eventId || '')}</td>
+                            <td>${res.nbPlaces || 1}</td>
+                            <td>${montant} €</td>
+                            <td><strong>${statusLabel}</strong></td>
+                            <td>${actionButtons}</td>
+                        </tr>
                     `;
-    }).join('')}
+                }).join('')}
             </tbody>
         </table>
     `;
 }
 
-window.payReservation = function(reservationId) {
-    window.location.href = `payement.html?reservationId=${reservationId}`;
+window.payReservation = function(reservationId, amount) {
+    window.location.href = `payment.html?reservationId=${reservationId}&amount=${amount}`;
 };
 
 window.modifyReservation = async function(reservationId, currentPlaces) {
     const newPlaces = prompt("Combien de places souhaitez-vous réserver au total ?", currentPlaces);
 
-    if (!newPlaces || isNaN(newPlaces) || newPlaces <= 0) return;
+    if (!newPlaces || isNaN(newPlaces) || Number(newPlaces) <= 0) {
+        return;
+    }
 
     try {
         const response = await fetch(`/api/reservations/${reservationId}`, {
@@ -94,37 +112,49 @@ window.modifyReservation = async function(reservationId, currentPlaces) {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ nbPlaces: parseInt(newPlaces, 10) })
+            body: JSON.stringify({
+                nbPlaces: parseInt(newPlaces, 10)
+            })
         });
 
         if (response.ok) {
             alert("Réservation modifiée ! Le prix total a été recalculé.");
             loadReservations();
         } else {
+            const errorText = await response.text();
+            console.error("Erreur modification :", response.status, errorText);
             alert("Impossible de modifier la réservation.");
         }
     } catch (error) {
-        console.error(error);
+        console.error("Erreur réseau :", error);
+        alert("Impossible de joindre le serveur.");
     }
 };
 
 window.cancelReservation = async function(reservationId) {
-    if (!confirm("Êtes-vous sûr de vouloir annuler cette réservation ?")) return;
+    if (!confirm("Êtes-vous sûr de vouloir annuler cette réservation ?")) {
+        return;
+    }
 
     try {
         const response = await fetch(`/api/reservations/${reservationId}`, {
             method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
 
         if (response.ok) {
             alert("Réservation annulée !");
             loadReservations();
         } else {
+            const errorText = await response.text();
+            console.error("Erreur annulation :", response.status, errorText);
             alert("Impossible d'annuler cette réservation.");
         }
     } catch (error) {
-        console.error(error);
+        console.error("Erreur réseau :", error);
+        alert("Impossible de joindre le serveur.");
     }
 };
 
