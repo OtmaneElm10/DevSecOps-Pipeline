@@ -13,16 +13,19 @@ Application web de gestion de tournois et d'événements pour un club sportif.
 | Spring Boot | Framework applicatif et création des API REST |
 | Maven | Gestion des dépendances et build |
 | JUnit + Mockito | Tests unitaires |
+| Jacoco | Couverture de code et rapports de tests|
 
 ### Front-End
 | Outil | Rôle |
 |---|---|
 | HTML / CSS / JavaScript | Architecture standard |
 | Fetch API | Appels vers le back-end |
+| Fetch API / Axios	| Appels vers le back-end |
 
 ### Infrastructure
 | Outil | Rôle |
 |---|---|
+|Git / GitLab | Gestion de versions et dépôt|
 | GitLab CI | Pipeline CI/CD |
 | SonarQube | Analyse qualité du code |
 | Nginx | Reverse proxy sur la VM |
@@ -47,8 +50,6 @@ mvn spring-boot:run
 ```
 
 ### 3. Lancer le front-end
-
-Vérifiez que le port **3000 est libre** sur votre machine avant de lancer.
 
 ```bash
 cd frontend/public
