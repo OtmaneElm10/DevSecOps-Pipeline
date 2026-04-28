@@ -22,7 +22,7 @@ public class JwtService {
     private static final String SECRET_KEY =
             "change-this-secret-key-change-this-secret-key";
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
+    private static final long EXPIRATION_TIME = 1000L * 60 * 60 * 24;
 
     
     /**
@@ -58,19 +58,14 @@ public class JwtService {
      */
     public boolean isTokenValid(final String token, final User user) {
         try {
-            return extractUsername(token).equals(user.getUsername())
-                    && !isTokenExpired(token);
-        } catch (Exception e) {
+            return extractUsername(token).equals(user.getUsername()) && !isTokenExpired(token);
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
             return false;
         }
     }
 
     private boolean isTokenExpired(final String token) {
-        try {
-            return extractAllClaims(token).getExpiration().before(new Date());
-        } catch (Exception e) {
-            return true;
-        }
+        return extractAllClaims(token).getExpiration().before(new Date());
     }
 
     /**
