@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord admin - Club de Foot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-container" style="max-width: 1100px;">
+    <h2>Tableau de bord admin</h2>
+
+    <div id="dashboard-container">
+        <p>Chargement...</p>
+    </div>
+
+    <p><a href="index.html">← Retour à l'accueil</a></p>
+</div>
+
+<script src="tableau-bord.js"></script>
+</body>
+</html>

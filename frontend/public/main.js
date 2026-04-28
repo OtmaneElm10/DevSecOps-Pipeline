@@ -141,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reservationsLink = document.getElementById('link-reservations');
     const paymentsLink = document.getElementById('link-payments');
     const profileLink = document.getElementById('link-profile');
+    const dashboardLink = document.getElementById('link-dashboard');
 
     if (token) {
         if (loginLink) loginLink.style.display = 'none';
@@ -149,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (reservationsLink) reservationsLink.style.display = 'inline-block';
         if (profileLink) profileLink.style.display = 'inline-block';
         if (logoutBtn) logoutBtn.style.display = 'inline-block';
+        if(dashboardLink && userRole === 'ADMIN') dashboardLink.style.display = 'inline-block';
     } else {
         if (loginLink) loginLink.style.display = 'inline-block';
         if (signupLink) signupLink.style.display = 'inline-block';
@@ -156,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (reservationsLink) reservationsLink.style.display = 'none';
         if (profileLink) profileLink.style.display = 'none';
         if (logoutBtn) logoutBtn.style.display = 'none';
+        if(dashboardLink) dashboardLink.style.display = 'none';
     }
 });
 
