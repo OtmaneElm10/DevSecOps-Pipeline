@@ -20,25 +20,49 @@ if (!eventId) {
             return res.json();
         })
         .then(event => {
+
+            const inscrits = event.nbInscrits || 0;
+            const max = event.capaciteMax || 1;
+            const pourcentage = Math.min((inscrits / max) * 100, 100);
+
             container.innerHTML = `
                 <div class="details-card">
-                    
-                    <img src="${getEventImage(event.type)}" class="details-image" alt="${event.type}">
 
-                    <h1>${event.title}</h1>
-                    <p class="description">${event.description || ''}</p>
-
-                    <div class="info-grid">
-                        <p><strong>Lieu :</strong> ${event.lieu}</p>
-                        <p><strong>Prix :</strong> ${event.prix} €</p>
-                        <p><strong>Capacité :</strong> ${event.capaciteMax} personnes</p>
-                        <p><strong>Début :</strong> ${new Date(event.dateDebut).toLocaleString()}</p>
-                        <p><strong>Fin :</strong> ${new Date(event.dateFin).toLocaleString()}</p>
+                    <div class="details-hero">
+                        <img src="${getEventImage(event.type)}" class="details-image">
+                        <div class="details-overlay">
+                            <h1>${event.title}</h1>
+                            <p class="details-type">${event.type}</p>
+                        </div>
                     </div>
 
-                    <button class="btn-login" id="btn-reserver">
-                        Réserver
-                    </button>
+                    <div class="details-body">
+
+                        <p class="description">${event.description || ''}</p>
+
+                        <div class="info-grid">
+                            <p><strong>📍 Lieu :</strong> ${event.lieu}</p>
+                            <p><strong>💶 Prix :</strong> ${event.prix} €</p>
+                            <p><strong>👥 Capacité :</strong> ${event.capaciteMax}</p>
+                            <p><strong>📅 Début :</strong> ${new Date(event.dateDebut).toLocaleString()}</p>
+                            <p><strong>📅 Fin :</strong> ${new Date(event.dateFin).toLocaleString()}</p>
+                        </div>
+
+                        <div class="progress-section">
+                            <div class="participant-label">
+                                <span>Participants</span>
+                                <span>${inscrits} / ${max}</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width:${pourcentage}%"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn-reserve-big" id="btn-reserver">
+                            Réserver maintenant
+                        </button>
+
+                    </div>
                 </div>
             `;
 
