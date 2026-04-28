@@ -47,20 +47,21 @@ class JwtServiceTest {
 
     @Test
     void isTokenValidShouldReturnFalseForExpiredToken() {
+        JwtService jwtService = new JwtService();
         User user = new User("expiredUser", "expired@example.com", "password", "USER");
         user.setId(99L);
 
-        Key signingKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+        Key signingKey = Keys.hmacShaKeyFor(
+            SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+
         String expiredToken = Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("id", user.getId())
                 .claim("role", user.getRole())
                 .setIssuedAt(new Date(System.currentTimeMillis() - 10000))
-                .setExpiration(new Date(System.currentTimeMillis() - 5000))
+                .setExpiration(new Date(System.currentTimeMillis() - 1))
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
-
-        JwtService jwtService = new JwtService();
 
         assertFalse(jwtService.isTokenValid(expiredToken, user));
     }
