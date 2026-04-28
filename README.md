@@ -26,7 +26,7 @@ Application web de gestion de tournois et d'événements pour un club sportif.
 | GitLab CI | Pipeline CI/CD |
 | SonarQube | Analyse qualité du code |
 | Nginx | Reverse proxy sur la VM |
-| MySQL | Base de données de production |
+| PostgreSQL | Base de données de production |
 
 ---
 
