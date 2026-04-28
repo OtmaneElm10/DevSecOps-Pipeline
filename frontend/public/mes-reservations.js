@@ -61,12 +61,6 @@ function displayReservations(reservations) {
                                 Payer
                             </button>
 
-                            <button class="btn-edit"
-                                onclick="modifyReservation(${res.id}, ${res.nbPlaces})"
-                                style="padding: 5px; font-size: 12px; margin-right: 5px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                                Modifier
-                            </button>
-
                             <button class="btn-delete"
                                 onclick="cancelReservation(${res.id})"
                                 style="padding: 5px; font-size: 12px;">
@@ -96,39 +90,6 @@ function displayReservations(reservations) {
 
 window.payReservation = function(reservationId, amount) {
     window.location.href = `payment.html?reservationId=${reservationId}&amount=${amount}`;
-};
-
-window.modifyReservation = async function(reservationId, currentPlaces) {
-    const newPlaces = prompt("Combien de places souhaitez-vous réserver au total ?", currentPlaces);
-
-    if (!newPlaces || isNaN(newPlaces) || Number(newPlaces) <= 0) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`/api/reservations/${reservationId}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                nbPlaces: parseInt(newPlaces, 10)
-            })
-        });
-
-        if (response.ok) {
-            alert("Réservation modifiée ! Le prix total a été recalculé.");
-            loadReservations();
-        } else {
-            const errorText = await response.text();
-            console.error("Erreur modification :", response.status, errorText);
-            alert("Impossible de modifier la réservation.");
-        }
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-        alert("Impossible de joindre le serveur.");
-    }
 };
 
 window.cancelReservation = async function(reservationId) {
