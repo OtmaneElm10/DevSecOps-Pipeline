@@ -55,8 +55,8 @@ class JwtServiceTest {
                 .setSubject(user.getUsername())
                 .claim("id", user.getId())
                 .claim("role", user.getRole())
-                .setIssuedAt(new Date(System.currentTimeMillis() - 60000))
-                .setExpiration(new Date(System.currentTimeMillis() - 30000))
+                .setIssuedAt(new Date(System.currentTimeMillis() - 10000))
+                .setExpiration(new Date(System.currentTimeMillis() - 5000))
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
 
