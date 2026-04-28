@@ -812,3 +812,40 @@ main {
     .fab-button { bottom: 20px; right: 20px; padding: 0 20px; height: 52px; }
     #details-container { padding: 24px; }
 }
+
+/* Copier le style du bouton d'inscription pour le bouton "Retour" */
+.btn-signup {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transition: background-color 0.18s ease, transform 0.08s ease, box-shadow 0.18s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Effets au survol et à l'appui */
+.btn-signup:hover {
+  background-color: #0069d9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+}
+
+.btn-signup:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.btn-signup:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.18);
+}
