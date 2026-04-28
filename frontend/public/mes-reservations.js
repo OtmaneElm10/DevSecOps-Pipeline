@@ -39,6 +39,7 @@ function displayReservations(reservations) {
         <table class="payments-table">
             <thead>
                 <tr>
+                    <th>Réf.</th>
                     <th>Événement</th>
                     <th>Places</th>
                     <th>Prix total</th>
@@ -75,6 +76,7 @@ function displayReservations(reservations) {
 
                     return `
                         <tr>
+                            <td>#${res.id}</td>
                             <td>${res.eventTitle || 'Événement #' + (res.eventId || '')}</td>
                             <td>${res.nbPlaces || 1}</td>
                             <td>${montant} €</td>
