@@ -330,6 +330,16 @@ main {
     gap: 10px;
 }
 
+.event-image {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
 .card h2 {
     margin: 0 0 4px 0;
     font-family: 'Bebas Neue', sans-serif;
@@ -637,6 +647,16 @@ main {
 /* ---------- PAGE DÉTAILS ---------- */
 .details-page {
     padding: 32px 40px;
+}
+
+.details-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-md);
 }
 
 #details-container {

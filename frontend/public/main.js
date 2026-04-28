@@ -2,6 +2,14 @@ const eventList = document.getElementById('event-list');
 const token = localStorage.getItem('token');
 const userRole = localStorage.getItem('role');
 
+function getEventImage(type) {
+    if (type === 'MATCH') return 'images/match.jpg';
+    if (type === 'TOURNOI') return 'images/tournoi.jpg';
+    if (type === 'STAGE') return 'images/stage.jpg';
+    if (type === 'SOIREE') return 'images/soiree.jpg';
+    return 'images/default.jpg';
+}
+
 function loadEvents(type = '') {
     let url = '/api/events';
 
@@ -43,6 +51,8 @@ function loadEvents(type = '') {
                 return `
                     <div class="card" data-id="${event.id}">
                         <div class="card-content">
+                            <img src="${getEventImage(event.type)}" class="event-image" alt="${event.type}">
+                            
                             <h2>${event.title}</h2>
                             <p>${event.description || ''}</p>
                             <p><strong>Lieu :</strong> ${event.lieu}</p>
@@ -97,8 +107,6 @@ function deleteEvent(eventId) {
     if (!confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
         return;
     }
-
-    const token = localStorage.getItem('token');
 
     fetch(`/api/events/${eventId}`, {
         method: 'DELETE',
