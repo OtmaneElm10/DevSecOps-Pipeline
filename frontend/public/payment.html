@@ -13,7 +13,7 @@
         <form id="payment-form">
             <div class="card-input-container">
                 <input type="text" placeholder="Nom sur la carte" required>
-                <input type="number" placeholder="0000 0000 0000 0000" maxlength="16" minlength="13" required>
+                <input type="text" pattern="[0-9]{16}" placeholder="0000 0000 0000 0000" maxlength="16" minlength="16" required>
                 <div class="form-row">
                     <input type="text" pattern="[0-9]{2}-[0-9]{2}" placeholder="MM-YY" maxlength="5" required>
                     <input type="text" pattern="[0-9]{3}" placeholder="CVC" minlength="3" maxlength="3" required>
