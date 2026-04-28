@@ -812,3 +812,37 @@ main {
     .fab-button { bottom: 20px; right: 20px; padding: 0 20px; height: 52px; }
     #details-container { padding: 24px; }
 }
+
+/* ---------- Tableau de bord admin ---------- */
+
+.admin-event-block {
+    margin-bottom: 34px;
+    padding: 22px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-event-block h3 {
+    margin-top: 0;
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.dashboard-stats {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.dashboard-stats p {
+    margin: 0;
+    padding: 10px 14px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    background: rgba(229, 180, 67, 0.06);
+}
