@@ -1063,4 +1063,28 @@ main {
     .info-grid {
         grid-template-columns: 1fr;
     }
+
+
+}
+
+body.details-page {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+}
+
+body.details-page #details-container {
+
+    width: 100%;
+
+    max-width: 820px;
+
+    margin: 0 auto;
+
 }
