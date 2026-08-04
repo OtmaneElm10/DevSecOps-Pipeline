@@ -70,3 +70,4 @@ L'application est déployée et accessible à l'adresse suivante :
 ```
 http://192.168.75.61
 ```
+test
