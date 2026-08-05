@@ -43,6 +43,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro # ro is read only, for security purpose
+      - ./frontend/public:/usr/share/nginx/html:ro
     depends_on:
       - eventapp
 
