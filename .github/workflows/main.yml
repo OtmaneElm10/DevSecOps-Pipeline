@@ -36,6 +36,7 @@ jobs:
         run: |
           mvn verify sonar:sonar \
           -Dsonar.host.url=${{ secrets.SONAR_URL }} \
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }} 
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.projectKey=event-app
           
     
