@@ -1,0 +1,40 @@
+name: EventApp CI
+on:
+  push:
+    branches:
+    - main
+
+  pull_request:
+    branches:
+      - main 
+
+jobs:
+  build:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Compilation
+        working-directory: backend
+        run: mvn clean package -DskipTests
+
+      - name: Tests unitaires 
+        working-directory: backend
+        run: mvn test
+
+      - name: Analyse SonarQube
+        working-directory: backend
+        run: |
+          mvn verify sonar:sonar \
+          -Dsonar.host.url=${{ secrets.
+          
+    
