@@ -1,22 +1,23 @@
 rules:
-  id: no-jwt-token-logging
-  languages:
-    - java
+  - id: no-jwt-token-logging
 
-  message: >-
-    Sensitive token detected in application logs.
-    Do not log JWTs or authentification tokens.
+    languages:
+      - java
 
-  severity: ERROR
+    message: >
+      Sensitive token detected in application logs.
+      Do not log JWTs or authentication tokens.
 
-  patterns:
-    - pattern-either:
-        - pattern: $LOGGER.info(..., $TOKEN, ...)
-        - pattern: $LOGGER.warn(..., $TOKEN, ...)
-        - pattern: $LOGGER.error(..., $TOKEN, ...)
-        - pattern: $LOGGER.debug(..., $TOKEN, ...)
-        - pattern: System.out.println($TOKEN)
+    severity: ERROR
 
-     - metavariable-regex:
-         metavariable: $TOKEN
-         regex: "(?i).*(jwt|token|accessToken|refreshToken).*"
+    patterns:
+      - pattern-either:
+          - pattern: $LOGGER.info(..., $TOKEN, ...)
+          - pattern: $LOGGER.warn(..., $TOKEN, ...)
+          - pattern: $LOGGER.error(..., $TOKEN, ...)
+          - pattern: $LOGGER.debug(..., $TOKEN, ...)
+          - pattern: System.out.println($TOKEN)
+
+      - metavariable-regex:
+          metavariable: $TOKEN
+          regex: "(?i).*(jwt|token|accessToken|refreshToken).*"
