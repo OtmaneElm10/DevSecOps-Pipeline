@@ -24,7 +24,7 @@ jobs:
             docker run --rm \
             -v "$PWD:/repo" \
             ghcr.io/gitleaks/gitleaks:latest \
-            detect --source /repo
+            detect --source --verbose /repo
              
   build:
     needs: secret-scanning
