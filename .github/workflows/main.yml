@@ -19,14 +19,12 @@ jobs:
           with:
             fetch-depth: 0 #fetch all commits, not only the last
 
-        - name: Install Gitleaks
-          run: git clone https://github.com/gitleaks/gitleaks.git
-
-        - name: Scan for Secrets
-          run: |
-            cd gitleaks
-            make build
-
+        - name: Scan for secrets
+          run : |
+            docker run --rm \
+            -v "$PWD:/repo" \
+            ghcr.io/gitleaks/gitleaks:latest \
+            detect --source /repo
              
   build:
     needs: secret-scanning
