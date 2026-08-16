@@ -65,4 +65,48 @@ jobs:
           -Dsonar.host.url=${{ secrets.SONAR_URL }} \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
           -Dsonar.projectKey=event-app
+
+  Semgrep:
+    needs: build
+    name: Semgrep SAST Analysis
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Backend SAST Scan
+        run: |
+          docker run --rm \
+            -v "${PWD}:/src" \
+            semgrep/semgrep \
+            semgrep scan \
+            --config=p/java \
+            --config=p/owasp-top-ten \
+            /src/backend \
+            --error
+
+      - name: Frontend SAST Scan
+        run: |
+          docker run --rm \
+            -v "${PWD}:/src" \
+            semgrep/semgrep \
+            semgrep scan \
+            --config=p/javascript \
+            --config=p/owasp-top-ten \
+            /src/frontend \
+            --error
+
+      - name: Pipeline SAST Scan
+        run: |
+          docker run --rm \
+            -v "${PWD}:/src" \
+            semgrep/semgrep \
+            semgrep scan \
+            --config=p/ci \
+            /src/.github \
+            --error
+          
+          
+            
           
