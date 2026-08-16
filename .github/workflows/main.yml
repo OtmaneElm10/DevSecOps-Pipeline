@@ -55,6 +55,9 @@ jobs:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+        
       - name: Scan & send to sonarqube server
         working-directory: backend
         run: |
