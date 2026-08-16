@@ -81,7 +81,7 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
-      - name: Backend SAST Scan
+      - name: Backend main SAST Scan
         run: |
           docker run --rm \
             -v "${PWD}:/src" \
@@ -92,7 +92,21 @@ jobs:
             /src/backend \
             --verbose \
             --error
-
+            
+      - name: Backend Particular cases
+        run: |
+          docker run --rm \
+          -v "${PWD}:/src" \
+          semgrep/semgrep \
+          semgrep scan \
+          --config=security/semgrep/jwt-security/hardcoded-jwt.yml \
+          --config=security/semgrep/jwt-security/jwt-none-alg.yml \
+          --config=security/semgrep/jwt-security/info-logger.yml \
+          /src/backend \
+          --verbose \
+          --error
+          
+      
       - name: Frontend SAST Scan
         run: |
           docker run --rm \
