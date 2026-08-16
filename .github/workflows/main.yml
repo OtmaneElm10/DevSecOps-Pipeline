@@ -57,6 +57,12 @@ jobs:
     steps:
       - name: Checkout du code
         uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
         
       - name: Scan & send to sonarqube server
         working-directory: backend
@@ -84,6 +90,7 @@ jobs:
             --config=p/java \
             --config=p/owasp-top-ten \
             /src/backend \
+            --verbose \
             --error
 
       - name: Frontend SAST Scan
@@ -95,6 +102,7 @@ jobs:
             --config=p/javascript \
             --config=p/owasp-top-ten \
             /src/frontend \
+            --verbose \
             --error
 
       - name: Pipeline SAST Scan
@@ -105,6 +113,7 @@ jobs:
             semgrep scan \
             --config=p/ci \
             /src/.github \
+            --verbose \
             --error
           
           
