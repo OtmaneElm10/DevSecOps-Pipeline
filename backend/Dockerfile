@@ -7,6 +7,8 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR app/
+RUN useradd -r appuser
 COPY --from=builder /app/target/event-app-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8081
+USER appuser
 ENTRYPOINT ["java", "-jar", "app.jar"]
