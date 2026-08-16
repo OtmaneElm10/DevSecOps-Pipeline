@@ -1,0 +1,11 @@
+title = " Configuration GitLeaks"
+
+[[allowlists]]
+
+description = "Faux positifs historique GitLab"
+
+
+fingerprints = [
+  "b3f5284900e42b0a69982c13bfff87cdbb775de1:.gitlab-ci.yml:curl-auth-user:71",
+  "1cba34396b9759d56d9554163002c2c8f96f83e5:.gitlab-ci.yml:curl-auth-user:64"
+]
