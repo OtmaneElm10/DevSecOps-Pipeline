@@ -20,14 +20,12 @@ jobs:
             fetch-depth: 0 #fetch all commits, not only the last
 
         - name: Install Gitleaks
-          run: |
-            curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_linux_x64.tar.gz -o gitleaks.tar.gz
-            tar -xzf gitleaks.tar.gz
-            sudo mv gitleaks /usr/local/bin/
+          run: git clone https://github.com/gitleaks/gitleaks.git
 
         - name: Scan for Secrets
           run: |
-            gitleaks detect --source . --verbose
+            cd gitleaks
+            make build
 
              
   build:
