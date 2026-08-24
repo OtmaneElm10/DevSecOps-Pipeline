@@ -148,6 +148,15 @@ jobs:
           java-version: '21'
           cache: maven
 
+
+      - name: Cache dependency-check database
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: .dependency-check-data # dossier à mettre en cache pour le prochain runner
+          key: dependency-check-${{ runner.os }} #identifiant
+
+          
+
       - name: OWASP dependency-check scan
         working-directory: backend
         run: |
@@ -157,11 +166,18 @@ jobs:
           -DdataDirectory=${{ github.workspace }}/.dependency-check-data \
           -Dformats=HTML
 
-      - name: Cache dependency-check database
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+      
+      - name: Upload Dependency-Check report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          path: .dependecy-check-data # dossier à mettre en cache pour le prochain runner
-          key: dependency-check-${{ runner.os }} #identifiant
+          name: dependency-check-report
+          path: backend/target/dependency-check-report.html
+
+
+    
+
+
         
           
         
