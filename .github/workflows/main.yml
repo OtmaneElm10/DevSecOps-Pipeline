@@ -153,9 +153,11 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: .dependency-check-data # dossier à mettre en cache pour le prochain runner
-          key: dependency-check-${{ runner.os }} #identifiant
+          key: dependency-check-${{ runner.os }}-${{ github.run_id }} #identifiant du runner 
+          restore-keys: |
+            dependency-check-${{ runner.os }}-
+            
 
-          
 
       - name: OWASP dependency-check scan
         working-directory: backend
