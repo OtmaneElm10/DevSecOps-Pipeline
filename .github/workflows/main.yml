@@ -165,6 +165,7 @@ jobs:
           mvn org.owasp:dependency-check-maven:check \
           -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
           -DdataDirectory=${{ github.workspace }}/.dependency-check-data \
+          -DfailBuildOnCVSS=7 \
           -Dformats=HTML
 
       
