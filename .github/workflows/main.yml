@@ -129,6 +129,36 @@ jobs:
             /src/.github \
             --verbose \
             --error
+
+
+  SCA:
+    needs: build
+    name: SCA scan 
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout du code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Setup Java
+        uses:  actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: OWASP dependency-check scan
+        working-directory: backend
+        run: |
+          mvn org.owasp:dependency-check-maven:check \
+          -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
+          -DfailBuildOnCVSS=7 \
+          -Dformats=HTML
+          
+        
+        
+    
           
           
             
