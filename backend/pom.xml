@@ -15,6 +15,7 @@
         <java.version>17</java.version>
         <tomcat.version>10.1.59</tomcat.version>
 	<spring-security.version>6.5.11</spring-security.version>
+	<log4j2.version>2.25.5</log4j2.version>
         <sonar.projectKey>g17_projettransversal2025-mif10_AZ0a45w9pItf3KCWeGy7</sonar.projectKey>
         <sonar.projectName>ProjetTransversal2025-Mif10</sonar.projectName>
         <sonar.qualitygate.wait>false</sonar.qualitygate.wait>
