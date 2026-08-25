@@ -1,4 +1,7 @@
 name: EventApp CI
+permissions: 
+  contents: read
+  packages: write
 on:
   push:
     branches:
@@ -176,6 +179,42 @@ jobs:
           name: dependency-check-report
           path: backend/target/dependency-check-report.html
 
+
+  Image:
+    needs: SCA
+    name: Image build & Trivy scan
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout du code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2
+        with:
+          registry: ghcr.io
+          username: $ {{ github.actor }}
+          password: $ {{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Build & push Backend Image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ghcr.io/otmaneelm10/eventapp-backend:latest
+
+      - name : Build & push Nginx image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
+        with:
+          context: .nginx/
+          file: ./nginx/Dockerfile
+          push: true
+          tags: ghcr.io/otmaneelm10/eventapp-nginx:latest
+      
+          
 
     
 
