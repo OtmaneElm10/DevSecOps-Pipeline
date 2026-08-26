@@ -181,7 +181,7 @@ jobs:
 
 
   Image:
-    needs: SCA
+    needs: [ SonarQube, Semgrep, SCA]
     name: Image build & Trivy scan
     runs-on: ubuntu-latest
 
