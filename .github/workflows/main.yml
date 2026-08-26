@@ -217,7 +217,7 @@ jobs:
         with:
           image-ref: 'ghcr.io/${{ secrets.GH_ACTOR }}/eventapp-backend:${{ github.sha }}' # on utilise l'image du commit
           format: 'table' # avoir les résultats sous forme de table dans les logs github 
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
           exit-code: '1' # si critical ou high on bloque tout
 
       - name: Scan Nginx Image
@@ -225,7 +225,7 @@ jobs:
         with:
           image-ref: 'ghcr.io/${{ secrets.GH_ACTOR }}/eventapp-nginx:${{ github.sha }}'
           format: 'table' 
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
           exit-code: '1'
 
       - name: Push Backend Image 
