@@ -180,7 +180,7 @@ jobs:
           path: backend/target/dependency-check-report.html
 
 
-  Image:
+  Image-build-and-scan:
     needs: [ SonarQube, Semgrep, SCA]
     name: Image build & Trivy scan
     runs-on: ubuntu-latest
@@ -198,21 +198,46 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Build & push Backend Image
+      - name: Build Backend Image
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          push: true
-          tags: ghcr.io/otmaneelm10/eventapp-backend:latest
+          load: true # on ne push pas directement dans le registry, on la stocke pour l'analyse trivy
+          tags: ghcr.io/${{ github.actor }}/eventapp-backend:${{ github.sha }}
 
-      - name : Build & push Nginx image
+      - name: Build Nginx image
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
         with:
           context: .
           file: ./nginx/Dockerfile
-          push: true
-          tags: ghcr.io/otmaneelm10/eventapp-nginx:latest
+          load: true 
+          tags: ghcr.io/${{ github.actor }}/eventapp-nginx:${{ github.sha }}
+
+
+      - name: Scan Backend Image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: 'eventapp-backend:${{ github.sha }}' # on utilise l'image du commit
+          format: 'sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1' # si critical ou high on bloque tout
+
+      - name: Scan Nginx Image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: 'eventapp-nginx:${{ github.sha }}'
+          format: 'sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+      - name: Push Backend Image 
+        run: docker push ghcr.io/${{ github.actor }}/eventapp-backend:${{ github.sha }} # on push l'image du commit (si tout est ok)
+
+      - name: Push Nginx Image
+        run: docker push ghcr.io/${{ github.actor }}/eventapp-nginx:${{ github.sha }} 
+
+      
       
           
 
