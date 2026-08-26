@@ -179,6 +179,9 @@ jobs:
 
   Image-build-and-scan:
     needs: [ SonarQube, Semgrep, SCA]
+    permissions:
+      contents: read
+      security-events: write
     name: Image build & Trivy scan
     runs-on: ubuntu-latest
 
@@ -216,7 +219,8 @@ jobs:
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           image-ref: 'ghcr.io/${{ secrets.GH_ACTOR }}/eventapp-backend:${{ github.sha }}' # on utilise l'image du commit
-          format: 'table'
+          format: 'sarif'
+          output: 'trivy-results-backend.sarif'
           severity: 'CRITICAL'
           exit-code: '1'
 
@@ -224,9 +228,24 @@ jobs:
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           image-ref: 'ghcr.io/${{ secrets.GH_ACTOR }}/eventapp-nginx:${{ github.sha }}'
-          format: 'table'
+          format: 'sarif'
+          output: 'trivy-results-nginx.sarif'
           severity: 'CRITICAL'
           exit-code: '1'
+
+
+      - name: Upload Trivy Backend results
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81
+        if: always()
+        with:
+          sarif_file: 'trivy-results-backend.sarif'
+
+      - name: Upload Trivy Nginx results
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81
+        if: always()
+        with:
+          sarif_file: 'trivy-results-nginx.sarif'
+        
         
 
       - name: Push Backend Image 
