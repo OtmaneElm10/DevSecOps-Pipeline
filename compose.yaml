@@ -1,6 +1,6 @@
 services:
   eventapp-backend:
-    image: ghcr.io/OtmaneElm10/eventapp-backend:latest
+    image: ghcr.io/${GITHUB_AUTHOR}/eventapp-backend:latest
     restart: unless-stopped
 
     environment:
@@ -34,8 +34,8 @@ services:
        timeout: 5s
        retries: 5
 
-  nginx:
-    image: ghcr.io/OtmaneElm10/eventapp-nginx:latest
+  eventapp-nginx:
+    image: ghcr.io/${GITHUB_AUTHOR}/eventapp-nginx:latest
     restart: unless-stopped
     ports:
       - "80:80"
