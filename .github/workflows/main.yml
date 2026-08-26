@@ -219,7 +219,7 @@ jobs:
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           image-ref: 'ghcr.io/${{ github.actor }}/eventapp-backend:${{ github.sha }}' # on utilise l'image du commit
-          format: 'sarif' # avoir les résultats dans l'onglet security
+          format: 'table' # avoir les résultats sous forme de table dans les logs github 
           severity: 'CRITICAL,HIGH'
           exit-code: '1' # si critical ou high on bloque tout
 
@@ -227,7 +227,7 @@ jobs:
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           image-ref: 'ghcr.io/${{ github.actor }}/eventapp-nginx:${{ github.sha }}'
-          format: 'sarif' 
+          format: 'table' 
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
 
