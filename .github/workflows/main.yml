@@ -230,6 +230,7 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results-backend.sarif'
+          category: 'trivy-backend'
 
 
       - name: Scan Backend Image (security gate)
@@ -258,6 +259,7 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results-nginx.sarif'
+          category: 'trivy-nginx'
 
 
       - name: Scan Nginx Image (security gate)
