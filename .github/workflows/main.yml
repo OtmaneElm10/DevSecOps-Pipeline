@@ -184,6 +184,7 @@ jobs:
     needs: [ SonarQube, Semgrep, SCA]
     permissions:
       contents: read
+      packages: write
       security-events: write
     name: Image build & Trivy scan
     runs-on: ubuntu-latest
