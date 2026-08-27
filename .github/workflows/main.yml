@@ -1,4 +1,7 @@
 name: EventApp CI
+permissions:
+  contents: read
+  packages: write
 on:
   push:
     branches:
