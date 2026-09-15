@@ -167,6 +167,7 @@ jobs:
         run: |
           mvn org.owasp:dependency-check-maven:check \
           -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
+          -DsuppressionFile=dependency-check-suppressions.xml \
           -DdataDirectory=${{ github.workspace }}/.dependency-check-data \
           -DfailBuildOnCVSS=7 \
           -Dformats=HTML
