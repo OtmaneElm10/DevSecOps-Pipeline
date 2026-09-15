@@ -182,7 +182,7 @@ jobs:
 
 
   Image-build-and-scan:
-    needs: [ SonarQube, Semgrep, SCA]
+    needs: [Semgrep, SCA]
     permissions:
       contents: read
       packages: write
