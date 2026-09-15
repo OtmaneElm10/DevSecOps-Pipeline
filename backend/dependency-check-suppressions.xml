@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions
+    xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.4.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.4.xsd
+        https://dependency-check.github.io/DependencyCheck/dependency-suppression.1.4.xsd">
+
+    <!-- XsltView non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use XsltView or dynamic view-name resolution.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47884</cve>
+    </suppress>
+
+    <!-- SSE avec view fragments non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use Server-Sent Events or view fragments.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47890</cve>
+    </suppress>
+
+    <!-- WebFlux + Aalto non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp uses Spring MVC, not Spring WebFlux/Aalto XML processing.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47891</cve>
+    </suppress>
+
+    <!-- WebFlux functional endpoints non utilisés -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use Spring WebFlux functional endpoints.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47892</cve>
+    </suppress>
+
+    <!-- Spring MVC functional framework + SSE non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use Spring MVC functional routing or Server-Sent Events.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59313</cve>
+    </suppress>
+
+    <!-- SimpleEvaluationContext / compiled SpEL non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not evaluate SpEL using SimpleEvaluationContext or the SpEL compiler.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59283</cve>
+    </suppress>
+
+    <!-- WebFlux multipart non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use Spring WebFlux PartEventHttpMessageReader.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47885</cve>
+    </suppress>
+
+    <!-- SpEL fourni par utilisateur non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not evaluate user-controlled Spring Expression Language expressions.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47886</cve>
+    </suppress>
+
+    <!-- RSocket non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use Spring RSocket.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47888</cve>
+    </suppress>
+
+    <!-- WebFlux Jetty reactive non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp uses Spring MVC with Tomcat and not the WebFlux Jetty reactive adapter.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47889</cve>
+    </suppress>
+
+    <!-- WebFlux WebSocket non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use Spring WebFlux WebSocket support.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47893</cve>
+    </suppress>
+
+    <!-- Property-path data binding non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not expose user-controlled property paths through Spring data binding.
+        No ModelAttribute/InitBinder/DataBinder usage was identified.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59282</cve>
+    </suppress>
+
+    <!-- LDAP embarqué non utilisé -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use Spring Security's embedded UnboundID LDAP server.
+        Authentication is JWT based.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-core@6\.5\.11$</packageUrl>
+        <cve>CVE-2026-59270</cve>
+    </suppress>
+
+    <!-- WebAuthn + distributed sessions non utilisés -->
+    <suppress>
+        <notes><![CDATA[
+        EventApp does not use WebAuthn or distributed HTTP sessions.
+        Authentication is JWT based.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-core@6\.5\.11$</packageUrl>
+        <cve>CVE-2026-47841</cve>
+    </suppress>
+
+</suppressions>
