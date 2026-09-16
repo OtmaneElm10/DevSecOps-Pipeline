@@ -1,0 +1,53 @@
+services:
+  postgres-staging:
+    image: postgres:17
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: clubdb_staging
+      POSTGRES_USER: clubuser
+      POSTGRES_PASSWORD: ${MDP_STAGING}
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clubuser -d clubdb_staging"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    volumes:
+      - postgres-staging_data:/var/lib/postgresql/data
+
+
+  backend-staging:
+    image: ghcr.io/${GITHUB_AUTHOR}/eventapp-backend:${IMAGE_TAG}
+    restart: unless-stopped
+
+    environment:
+      DB_URL: jdbc:postgresql://postgres-staging:5432/clubdb_staging
+      DB_USER: clubuser
+      DB_PASSWORD: ${MDP_STAGING}
+
+    depends_on:
+      postgres-staging:
+        condition: service_healthy
+
+    expose:
+      - "8081"
+
+
+  nginx-staging:
+    image: ghcr.io/${GITHUB_AUTHOR}/eventapp-nginx:${IMAGE_TAG}
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8088:80"
+
+    volumes:
+      - ./nginx/nginx_staging.conf:/etc/nginx/conf.d/eventapp.conf:ro
+
+    depends_on:
+      - backend-staging
+
+
+volumes:
+  postgres-staging_data:
