@@ -284,6 +284,29 @@ jobs:
         run: docker push ghcr.io/${{ secrets.GH_ACTOR }}/eventapp-nginx:${{ github.sha }}
 
 
+
+
+  test-ssh:
+    name: Test ssh Connection
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Connection to vps
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+
+          script: |
+            echo "SSH connection successful"
+            whoami
+            hostname
+            pwd
+    
+
+
       
 
       
