@@ -182,7 +182,7 @@ jobs:
 
 
   Image-build-and-scan:
-    needs: [Semgrep, SCA]
+    needs: [Semgrep, SCA, SonarQube]
     permissions:
       contents: read
       packages: write
@@ -286,13 +286,14 @@ jobs:
 
 
 
-  test-ssh:
-    name: Test ssh Connection
+  deploy-staging:
+    name: Deploy staging
+    needs: Image-build-and-scan
     runs-on: ubuntu-latest
-
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-      - name: Connection to vps
+      - name: Deploy staging on VPS
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
         with:
           host: ${{ secrets.VPS_IP }}
@@ -300,10 +301,122 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
 
           script: |
-            echo "SSH connection successful"
-            whoami
-            hostname
-            pwd
+
+            set -e 
+            cd  ~//EventApplication/projettransversal2025-mif10
+            git pull origin main
+            export IMAGE_TAG="${{ github.sha }}"
+
+            docker compose \
+            -p eventapp-staging \
+            -f compose-staging.yml \
+            pull backend-staging nginx-staging
+
+
+            docker compose \
+            -p eventapp-staging \
+            -f compose-staging.yml \
+            up -d
+
+            sleep 30
+
+
+  integration-tests:
+    name: Integration tests
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+
+    steps:
+      - name: Run integration  tests on staging
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+
+          script: |
+
+            set -e
+            cd  ~/EventApplication/projettransversal2025-mif10
+            chmod +x script/*.sh
+
+            for s in script/*.sh; do
+              echo "Running $s"
+              "$s"
+            done
+
+
+  zap:
+    name: Owasp ZAP Scan (DAST)
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+
+    steps:
+      - name: Run ZAP on staging
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+
+          script: |
+
+            set -e
+
+            docker run --rm \
+              --network eventapp-staging_default \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap-baseline.py \
+              -t http://nginx-staging \
+              -I
+
+
+  deploy-production:
+    name: Deploy production
+    needs: [integration-tests, zap]
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy validated images to production
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+
+          script: |
+
+            set -e
+            cd ~/EventApplication/projettransversal2025-mif10
+            export IMAGE_TAG="${{ github.sha }}"
+            
+            docker compose pull eventapp-backend eventapp-nginx
+             docker compose up -d \
+               --no-deps \
+               eventapp-backend eventapp-nginx
+          
+    
+    
+    
+
+            
+            
+
+        
+
+        
+          
+      
+
+        
     
 
 
