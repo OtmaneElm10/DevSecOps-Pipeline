@@ -399,9 +399,11 @@ jobs:
             export IMAGE_TAG="${{ github.sha }}"
             
             docker compose pull eventapp-backend eventapp-nginx
-             docker compose up -d \
-               --no-deps \
-               eventapp-backend eventapp-nginx
+            
+             docker compose \
+               -p projettransversal2025-mif10 \
+               up -d
+             
           
     
     
