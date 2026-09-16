@@ -49,7 +49,7 @@ services:
 
 
   sonarqube:
-    image: sonarqube:community
+    image: sonarqube@sha256:58b068af30bdfdccf91222de36e310529033e853dfae221b429cba80d10d5751
     restart: unless-stopped
     ports:
      - "9000:9000"
